@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+    {% block head %}
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.red-blue.min.css" /> 
+    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.0/material.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Metrial+Icons">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <title>{% block title %}Unknown Page{% endblock %} - Redeleitsystem</title>
+    {% endblock %}
+</head>
+<body>
+<div class="rede-layout mdl-layout mdl-js-layout mdl-layout--fixed-draw mdl-layout--fixed-header">
+    <header class="rede-header hdml-layout__header mdl-color--white mdl-color--grey-100 mdl-color-text--grey-600">
+        <div class="mdl-layout__header-row">
+            <span class="mdl-layout-title">Redeleitsystem</span>
+            <div class="mdl-layout-spacer"></div>
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effet mdl-button--icon" id="hdrbtn">
+                <i class="material-icons">more_vert</i>
+            </button>
+            <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
+                {% block toplinks %}
+                    <li class="mdl-menu__item">Impressum</li>
+                {% endblock %}
+            </ul>
+        </div>
+    </header>
+    <div class="rede-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
+        <header class="rede-drawer-header">
+            <div class="rede-account-dropdown">
+                <span>
+                {% if current_user.is_authenticated() %}
+                    {{ current_user.fullname }}
+                {% else %}
+                    Guest
+                {% endif %}
+                </span>
+                <div class="mdl-layout-spacer"></div>
+                <button id="accbtn" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                    <i class="material-icons" role="presentation">arrow_drop_down</i>
+                    <span class="visuallyhidden">Account</span>
+                </button>
+                <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effet" for="accbtn">
+                    {% if current_user.is_authenticated() %}
+                    <li class="mdl-menu__item"><a class="mdl-navigation__link" href="{{ url_for(".logout") }}">Logout</a></li>
+                    {% else %}
+                    <li class="mdl-menu__item"><a class="mdl-navigation__link" href="{{ url_for(".login") }}">Login</a></li>
+                    <li class="mdl-menu__item"><a class="mdl-navigation__link" href="{{ url_for(".register") }}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </header>
+    </div>
+    <main class="mdl-layout__content mdl-color--grey-100">
+        <div class="mdl-grid rede-content">
+        {% block content %}
+        There is no content yet.
+        {% endblock %}
+        </div>
+    </main>
+</body>
+</html>
