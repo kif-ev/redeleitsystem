@@ -1,0 +1,16 @@
+
+.flash-card.mdl-card {
+    
+}
+
+.flash-card.mdl-card.alert-success {
+    background-color: lightgreen;
+}
+
+.flash-card.mdl-card.alert-warning {
+    background-color: orange;
+}
+
+.flash-card.mdl-card.alert-error {
+    background-color: red;
+}
