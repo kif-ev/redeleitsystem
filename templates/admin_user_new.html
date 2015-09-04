@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+{% from "macros.html" import render_form %}
+{% block title %}Add User - Administration{% endblock %}
+
+{% block content %}
+        {{ render_form(form, action_url=url_for(".user_new", id=id), action_text="Add", title="Create User") }}
+{% endblock %}

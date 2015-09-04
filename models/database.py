@@ -1,4 +1,4 @@
-form flask.ext.login import UserMixin
+from flask.ext.login import UserMixin
 
 from shared import db
 

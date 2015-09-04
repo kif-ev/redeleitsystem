@@ -14,3 +14,86 @@
 .flash-card.mdl-card.alert-error {
     background-color: red;
 }
+
+.rede-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
+}
+
+.rede-layout .rede-header .mdl-textfield {
+    padding-top: 27px;
+}
+
+.rede-layout .mdl-layout__header .mdl-layout__drawer-button {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.mdl-layout__drawer .avatar {
+    margin-bottom: 16px;
+}
+
+.rede-drawer {
+    border: none;
+}
+
+.rede-drawer .mdl-menu__container {
+    z-index: -1;
+}
+
+.rede-drawer .rede-navigation {
+    z-index: -2;
+}
+
+.rede-drawer .mdl-menu .mdl-menu__item {
+    display: flex
+    align-items: center;
+}
+
+.rede-drawer-header {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 16px;
+    height: 151px;
+}
+
+.rede-avatar-dropdown {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+.rede-navigation {
+    flex-grow: 1;
+}
+
+.rede-layout .rede-navigation .mdl-navigation__link {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.56);
+    font-weight: 500;
+}
+
+.rede-layout .rede-navigation .mdl-navigation__link:hover {
+    background-color: #00BCD4;
+    color: #37474F;
+}
+
+.rede-navigation .mdl-navigation__link .material-icons {
+    font-size: 24px;
+    color: rgba(255, 255, 255, 0.56);
+    margin-right: 32px;
+}
+
+.rede-content {
+    max-width: 1080px;
+}
+
+.rede-separator {
+    height: 32px;
+}

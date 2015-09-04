@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+{% from "macros.html" import render_form %}
+{% block title %}Index{% endblock %}
+
+{% block content %}
+    {{ render_form(form, action_url=url_for(".login"), action_text="Login", title="Login") }}
+{% endblock %}

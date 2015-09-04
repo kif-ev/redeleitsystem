@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask, g, current_up, request, render_template, session, flash, redirect, url_for, abort
+from flask import Flask, g, current_app, request, render_template, session, flash, redirect, url_for, abort
 from flask.ext.login import login_user, logout_user, login_required, current_user
 from flask.ext.principal import Principal, Identity, AnonymousIdentity, identity_changed, identity_loaded, UserNeed, RoleNeed
 from passlib.hash import pbkdf2_sha256
@@ -34,6 +34,46 @@ def index():
         db.session.add(user)
         db.session.commit()
     return render_template("index.html")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = db.session.query(User).filter_by(username=form.username.data).first()
+        if (user is not None) and (pbkdf2_sha256.verify(form.password.data, user.password)):
+            login_user(user, remember=form.remember_me.data)
+            identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
+            flash("Welcome back, {}!".format(user.fullname), "alert-success")
+            return redirect(request.args.get("next") or url_for(".index"))
+        else:
+            flash("Invalid username or wrong password", "alert-error")
+    return render_template("login.html", form=form)
+
+@app.route("/logout", methods=["GET", "POST"])
+@login_required
+def logout():
+    logout_user()
+    for key in ("identity.name", "identiy.auth_type"):
+        session.pop(key, None)
+    identity_changed.send(current_app._get_current_object(), identity=AnonymousIdentity())
+    flash("You have been logged out.", "alert-success")
+    return redirect(url_for(".index"))
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    form = NewUserForm()
+    if form.validate_on_submit():
+        length = len(db.session.query(User).filter_by(username=form.username.data).all())
+        if length > 0:
+            flash("There already is a user with that name.")
+            return render_template("register.html", form=form)
+        password = pbkdf2_sha256.encrypt(form.password.data, rounds=200000, salt_size=16)
+        user = User(fullname, username, password, [])
+        db.session.add(user)
+        db.session.commit()
+        flash("Your account has been created, you may now log in with it.")
+        return redirect(url_for(".login"))
+    return render_template("register.html", form=form)
 
 
 @identity_loaded.connect_via(app)

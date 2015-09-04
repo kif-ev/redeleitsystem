@@ -9,8 +9,8 @@
 {%- endmacro %}
 
 {% macro render_stringfield(field) -%}
-    <div class="mdl-textfield mdl-js-textfield">
-        <input id="{{ field.id }}" name="{{ field.id }}" class="mdl-textfield__input" type="text" />
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input id="{{ field.id }}" name="{{ field.id }}" class="mdl-textfield__input" type="text" value="{{ field.data }}" />
         <label class="mdl-textfield__label" for="{{ field.id }}">{{ field.label.text }}</label>
         {% if field.errors %}
             {% for e in errors %}
@@ -23,7 +23,7 @@
 {%- endmacro %}
 
 {% macro render_passwordfield(field) -%}
-    <div class="mdl-textfield mdl-js-textfield">
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
         <input id="{{ field.id }}" name="{{ field.id }}" class="mdl-textfield__input" type="password" />
         <label class="mdl-textfield__label" for="{{ field.id }}">{{ field.label.text }}</label>
         {% if field.errors %}
@@ -41,11 +41,37 @@
         <input type="checkbox" id="{{ field.id }}" name="{{ field.id }}" class="mdl-checkbox__input" />
         <span class="mdl-checkbox__label">{{ field.label.text }}</span>
     </label>
+    {% if field.errors %}
+        {% for e in errors %}
+            <div class="mdl-card__supporting-text">
+                {{ e }}
+            </div>
+        {% endfor %}
+    {% endif %}
 {%- endmacro %}
 
 {% macro render_csrftokenfield(field, kwargs) -%}
     {{ field(title=field.description, **kwargs) }}
 {%- endmacro %}
+
+{% macro render_selectmultiplefield(field) -%}
+        <button id="{{ field.id }}-button" class="mdl-button mdl-js-button" type="button">
+            {{ field.label.text }}
+        </button>
+        <select id="{{ field.id }}" name="{{ field.id }}" multiple class="mdl-menu mdl-js-menu mdl-menu--top-left" for="{{ field.id }}-button">
+            {% for name, text in field.choices %}
+                <option value="{{ name }}" {% if field.data is not none and name in field.data %}selected{% endif %} class="mdl-menu__item" >{{ text }}</option>
+            {% endfor %}
+        </select>
+        {% if field.errors %}
+            {% for e in field.errors %}
+                <p class="help-block">{{ e }}</p>
+            {% endfor %}
+        {% endif %}
+    </label>
+{%- endmacro %}
+
+
 
 {% macro render_form(form, action_url="", title=None, action_text="Submit", class_="mdl-card mdl-shadow--2dp", title_class="mdl-card__title", title_next_class="mdl-card__title-text", content_class="mdl-card__supporting-text", action_class="mdl-card__actions", btn_class="mdl-button mdl-js-button mdl-button--raised mdl-button-colored") -%}
     <div class="{{ class_ }}">
@@ -63,11 +89,12 @@
                         {{ render_booleanfield(f) }}
                     {% elif f.type == "CSRFTokenField" %}
                         {{ render_csrftokenfield(f, kwargs) }}
+                    {% elif f.type == "SelectMultipleField" %}
+                        {{ render_selectmultiplefield(f) }}
                     {% else %}
                         {{ f.type }}
                         {{ render_field(f) }}
                     {% endif %}
-                {% endfor %}
                 {% endfor %}
             </div>
             <div class="{{ action_class }}">
