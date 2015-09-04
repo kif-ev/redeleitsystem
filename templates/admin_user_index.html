@@ -1,15 +1,15 @@
-{% extends "layout.html" %}
-{% block title %}Index{% endblock %}
+{% extends "admin_index.html" %}
+{% block admin_title %}Users{% endblock %}
 
 {% block content %}
     <div class="mdl-cell mdl-cell--3-col mdl-grid mdl-grid--no-spacing">
         <table class="mdl-data-table mdl-js-table mdl-shadow--2dp mdl-cell mdl-cell--3-col">
             <thead>
                 <tr>
-                    <th class="mdl-data-table_-cell--non-numeric">Full Name</th>
-                    <th class="mdl-data-table_-cell--non-numeric">Username</th>
-                    <th class="mdl-data-table_-cell--non-numeric">Roles</th>
-                    <th class="mdl-data-table_-cell--non-numeric">Delete</th>
+                    <th class="mdl-data-table__cell--non-numeric">Full Name</th>
+                    <th class="mdl-data-table__cell--non-numeric">Username</th>
+                    <th class="mdl-data-table__cell--non-numeric">Roles</th>
+                    <th class="mdl-data-table__cell--non-numeric">Delete</th>
                 </tr>
             </thead>
             <tbody>

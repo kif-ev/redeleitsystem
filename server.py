@@ -7,8 +7,8 @@ from passlib.hash import pbkdf2_sha256
 
 import config
 from shared import db, login_manager
-from models.forms import LoginForm
-from models.database import User
+from models.forms import LoginForm, NewUserForm
+from models.database import User, Statement, Speaker
 
 app = Flask(__name__)
 app.config.from_object(config)
@@ -19,9 +19,10 @@ login_manager.login_message_category = "alert-error"
 
 Principal(app)
 
-from modules import admin
+from modules import admin, speech
 
 app.register_blueprint(admin.admin, url_prefix="/admin")
+app.register_blueprint(speech.speech, url_prefix="/speech")
 db.create_all(app=app)
 
 @app.route("/")
@@ -33,7 +34,8 @@ def index():
         user = User(fullname, username, password, ["admin", "user"])
         db.session.add(user)
         db.session.commit()
-    return render_template("index.html")
+    #return render_template("index.html")
+    return redirect(url_for("speech.show", mode="pending"))
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -74,7 +76,6 @@ def register():
         flash("Your account has been created, you may now log in with it.")
         return redirect(url_for(".login"))
     return render_template("register.html", form=form)
-
 
 @identity_loaded.connect_via(app)
 def on_identity_loaded(sender, identity):

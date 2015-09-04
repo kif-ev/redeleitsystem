@@ -21,3 +21,6 @@ class AdminUserForm(Form):
     fullname = StringField("Full name", validators=[InputRequired("Entering the name is required.")])
     username = StringField("Username", validators=[InputRequired("Entering the username is required.")])
     roles = SelectMultipleField("User roles", choices=[(x.lower().strip(), x) for x in shared.roles])
+
+class AddStatementForm(Form):
+    speaker_name = StringField("Speaker", validators=[InputRequired("Entering the speaker is required.")])

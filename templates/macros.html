@@ -10,10 +10,10 @@
 
 {% macro render_stringfield(field) -%}
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input id="{{ field.id }}" name="{{ field.id }}" class="mdl-textfield__input" type="text" value="{{ field.data }}" />
+        <input id="{{ field.id }}" name="{{ field.id }}" class="mdl-textfield__input" type="text"{% if field.data is not none %}value="{{ field.data }}"{% endif %} />
         <label class="mdl-textfield__label" for="{{ field.id }}">{{ field.label.text }}</label>
         {% if field.errors %}
-            {% for e in errors %}
+            {% for e in field.errors %}
                 <div class="mdl-card__supporting-text">
                     {{ e }}
                 </div>
@@ -27,7 +27,7 @@
         <input id="{{ field.id }}" name="{{ field.id }}" class="mdl-textfield__input" type="password" />
         <label class="mdl-textfield__label" for="{{ field.id }}">{{ field.label.text }}</label>
         {% if field.errors %}
-            {% for e in errors %}
+            {% for e in field.errors %}
                 <div class="mdl-card__supporting-text">
                     {{ e }}
                 </div>
@@ -42,7 +42,7 @@
         <span class="mdl-checkbox__label">{{ field.label.text }}</span>
     </label>
     {% if field.errors %}
-        {% for e in errors %}
+        {% for e in field.errors %}
             <div class="mdl-card__supporting-text">
                 {{ e }}
             </div>
@@ -65,7 +65,9 @@
         </select>
         {% if field.errors %}
             {% for e in field.errors %}
-                <p class="help-block">{{ e }}</p>
+                <div class="mdl-card__supporting-text">
+                    {{ e }}
+                </div>
             {% endfor %}
         {% endif %}
     </label>
@@ -73,11 +75,11 @@
 
 
 
-{% macro render_form(form, action_url="", title=None, action_text="Submit", class_="mdl-card mdl-shadow--2dp", title_class="mdl-card__title", title_next_class="mdl-card__title-text", content_class="mdl-card__supporting-text", action_class="mdl-card__actions", btn_class="mdl-button mdl-js-button mdl-button--raised mdl-button-colored") -%}
+{% macro render_form(form, action_url="", title=None, action_text="Submit", class_="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--4-col-phone", title_class="mdl-card__title", title_next_class="mdl-card__title-text", content_class="mdl-card__supporting-text", action_class="mdl-card__actions", btn_class="mdl-button mdl-js-button mdl-button--raised mdl-button-colored") -%}
     <div class="{{ class_ }}">
         <form method="POST" action="{{ action_url }}">
             <div class="{{ title_class }}">
-                <h2 class="{{ title_text_class}}">{{ title if title is not none else action_text }}</h2>
+                <h3 class="{{ title_text_class}}">{{ title if title is not none else action_text }}</h3>
             </div>
             <div class="{{ content_class }}">
                 {% for f in form %}

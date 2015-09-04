@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% from "macros.html" import render_form %}
+{% block title %}Statements{% endblock %}
+{% block additional_js %}
+    <script src="{{ url_for(".update_show_js", mode=mode) }}" async></script>
+{% endblock %}
+
+{% block content %}
+    <table class="mdl-data-table mdl-js-table mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+        <thead>
+            <tr>
+                <th class="mdl-data-table__cell--non-numeric">Speaker</th>
+                {% if mode == "all" or mode == "past" %}
+                <th class="mdl-data-table__cell--non-numeric">Time</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% if mode == "all" or mode == "past" %}
+            {% for statement, speaker in statements %}
+                <tr>
+                    <td class="mdl-data-table__cell--non-numeric">
+                        {{ speaker.name }}
+                    </td>
+                    {% if mode == "all" %}
+                    <td class="mdl-data-table__cell--non-numeric">
+                        {{ statement.insertion_time.strftime("%d. %B %Y, %H:%M") }}
+                    </td>
+                    {% elif mode == "past" %}
+                    <td class="mdl-data-table__cell--non-numeric">
+                        {{ statement.execution_time.strftime("%d. %B %Y, %H:%M") }}
+                    </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        {% elif mode == "pending" %}
+            {% for statement, speaker, count in statements %}
+                {% if not statement.executed %}
+                    <tr>
+                        <td class="mdl-data-table__cell--non-numeric">
+                            <h5>{{ speaker.name }}</h5>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+{% endblock %}
