@@ -1,0 +1,36 @@
+{% extends "admin_index.html" %}
+{% block admin_title %}Events{% endblock %}
+
+{% block content %}
+    <div class="mdl-cell mdl-cell--3-col mdl-grid mdl-grid--no-spacing">
+        <table class="mdl-data-table mdl-js-table mdl-shadow--2dp mdl-cell mdl-cell--3-col">
+            <thead>
+                <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Name</th>
+                    <th class="mdl-data-table__cell--non-numeric">Date</th>
+                    <th class="mdl-data-table__cell--non-numeric">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for event in events %}
+                <tr>
+                    <td class="mdl-data-table__cell--non-numeric"><a href="{{ url_for(".event_edit", id=event.id) }}">{{ event.name }}</a></td>
+                    <td class="mdl-data-table__cell--non-numeric">{{ event.date.strftime("%d.%m.%Y") }}</td>
+                    <td class="mdl-data-table__cell--non-numeric">
+                        <a href="{{ url_for('.event_delete', id=event.id) }}">
+                            <i class="material-icons">delete</i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="rede-separator">
+            <div class="mdl-cell mdl-cell--1-col">
+                <a class="mdl-button mdl-button--colored mdl-js-button mdl-button--fab mdl-js-ripple-effect" href="{{ url_for('.event_new') }}">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

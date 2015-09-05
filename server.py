@@ -8,7 +8,7 @@ from passlib.hash import pbkdf2_sha256
 import config
 from shared import db, login_manager
 from models.forms import LoginForm, NewUserForm
-from models.database import User, Statement, Speaker
+from models.database import User, Statement, Speaker, Event
 
 app = Flask(__name__)
 app.config.from_object(config)
@@ -34,8 +34,23 @@ def index():
         user = User(fullname, username, password, ["admin", "user"])
         db.session.add(user)
         db.session.commit()
-    #return render_template("index.html")
-    return redirect(url_for("speech.show", mode="pending"))
+    events = Event.query.all()
+    meta = []
+    for event in events:
+        meta.append(([ (statement, speaker, count) for (statement, speaker, count) in speech.query_statements("pending", event.id) if not statement.executed ][0], event))
+    return render_template("index.html", meta=meta)
+
+@app.route("/update")
+def update():
+    events = Event.query.all()
+    meta = []
+    for event in events:
+        meta.append(([ (statement, speaker, count) for (statement, speaker, count) in speech.query_statements("pending", event.id) if not statement.executed ][0], event))
+    return render_template("update_index.html", meta=meta)
+
+@app.route("/update.js")
+def update_js():
+    return render_template("update_index.js")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

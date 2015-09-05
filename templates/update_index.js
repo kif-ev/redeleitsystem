@@ -11,7 +11,7 @@ function request() {
             update(xmlhttp.responseText);
         }
     };
-    var target = "{{ url_for('.update', mode=mode, event=event_id) }}";
+    var target = "{{ url_for('.update') }}";
     xmlhttp.open("GET", target, true);
     xmlhttp.send();
 }

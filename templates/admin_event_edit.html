@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+{% from "macros.html" import render_form %}
+{% block title %}Edit Event - Administration{% endblock %}
+
+{% block content %}
+        {{ render_form(form, action_url=url_for(".event_edit", id=id), action_text="Apply", title="Edit Event") }}
+{% endblock %}

@@ -34,43 +34,67 @@ class User(db.Model, UserMixin):
         )
 
 
+class Event(db.Model):
+    __tablename__ = "events"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, unique=True)
+    date = db.Column(db.Date)
+    
+    def __init__(self, name, date):
+        self.name = name
+        self.date = date
+    
+    def __repr__(self):
+        return "<Event(id={}, name='{}', date={})>".format(
+            self.id, 
+            self.name, 
+            self.date
+        )
+
+
 class Speaker(db.Model):
     __tablename__ = "speakers"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True)
+    name = db.Column(db.String)
+    event = db.Column(db.Integer, db.ForeignKey("events.id"), nullable=False)
     
-    def __init__(self, name):
+    def __init__(self, name, event):
         self.name = name
+        self.event = event
     
     def __repr__(self):
-        return "<Speaker(id={}, name={})>".format(self.id, self.name)
+        return "<Speaker(id={}, name={}, event={})>".format(
+            self.id, 
+            self.name,
+            self.event
+        )
 
 
 class Statement(db.Model):
     __tablename__ = "statements"
     id = db.Column(db.Integer, primary_key=True)
     speaker = db.Column(db.Integer, db.ForeignKey("speakers.id"), nullable=False)
+    event = db.Column(db.Integer, db.ForeignKey("events.id"), nullable=False)
     insertion_time = db.Column(db.DateTime)
     executed = db.Column(db.Boolean)
     execution_time = db.Column(db.DateTime)
     
-    def __init__(self, speaker, insertion_time=None, executed=False, execution_time=None):
+    def __init__(self, speaker, event, insertion_time=None, executed=False, execution_time=None):
         self.speaker = speaker
+        self.event = event
         self.insertion_time = insertion_time or datetime.now()
         self.executed = executed
         self.execution_time = execution_time or datetime.now()
     
     def __repr__(self):
-        return "<Statement(id={}, speaker={}, insertion_time={}, executed={}, execution_time={})>".format(
+        return "<Statement(id={}, speaker={}, event={}, insertion_time={}, executed={}, execution_time={})>".format(
             self.id, 
             self.speaker,
+            self.event,
             self.insertion_time,
             self.executed,
             self.execution_time
         )
-    
-    def dump(self):
-        return { "speaker": self.speaker, "insertion_time": self.insertion_time.timestamp(), "executed": self.executed, "execution_time": self.execution_time.timestamp() }
     
     def done(self):
         if self.executed:

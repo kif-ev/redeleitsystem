@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms import StringField, PasswordField, BooleanField, SelectMultipleField, SelectField, DateField, IntegerField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, SelectMultipleField, SelectField, DateField, IntegerField, TextAreaField, HiddenField
 from wtforms.validators import InputRequired, Length, EqualTo, Email, Optional, Length, NumberRange, AnyOf
 from models.database import User
 
@@ -24,3 +24,8 @@ class AdminUserForm(Form):
 
 class AddStatementForm(Form):
     speaker_name = StringField("Speaker", validators=[InputRequired("Entering the speaker is required.")])
+    event = HiddenField("Event")
+
+class NewEventForm(Form):
+    name = StringField("Name", validators=[InputRequired("Entering the name is required.")])
+    date = DateField("Date (DD.MM.YYYY)", validators=[InputRequired("Entering the date is required.")], format="%d.%m.%Y")
