@@ -1,3 +1,4 @@
 __pycache__/
 test.db
 *.pyc
+config.py
