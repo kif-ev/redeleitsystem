@@ -111,5 +111,5 @@ def on_identity_loaded(sender, identity):
 def load_user(user_id):
     return db.session.query(User).filter_by(id=user_id).first()
 
-if __name__ == "__main__":
+if __name__ == "__main__" and config.DEBUG:
     app.run(debug=config.DEBUG)
