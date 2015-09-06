@@ -37,7 +37,10 @@ def index():
     events = Event.query.all()
     meta = []
     for event in events:
-        meta.append(([ (statement, speaker, count) for (statement, speaker, count) in speech.query_statements("pending", event.id) if not statement.executed ][0], event))
+        ls = [ (statement, speaker, count) for (statement, speaker, count) in speech.query_statements("pending", event.id) if not statement.executed ]
+        no_speaker = Speaker("No Speaker", event)
+        no_statement = Statement(no_speaker, event)
+        meta.append((ls[0] if len(ls) > 0 else (no_statement, no_speaker, ()), event))
     return render_template("index.html", meta=meta)
 
 @app.route("/update")
@@ -45,7 +48,10 @@ def update():
     events = Event.query.all()
     meta = []
     for event in events:
-        meta.append(([ (statement, speaker, count) for (statement, speaker, count) in speech.query_statements("pending", event.id) if not statement.executed ][0], event))
+        ls = [ (statement, speaker, count) for (statement, speaker, count) in speech.query_statements("pending", event.id) if not statement.executed ]
+        no_speaker = Speaker("No Speaker", event)
+        no_statement = Statement(no_speaker, event)
+        meta.append((ls[0] if len(ls) > 0 else (no_statement, no_speaker, ()), event))
     return render_template("update_index.html", meta=meta)
 
 @app.route("/update.js")
