@@ -1,29 +1,31 @@
-var returned = true;
-var last_content = "";
-function request() {
-    if (!returned)
+var {{ prefix }}returned = true;
+var {{ prefix }}last_content = "";
+function {{ prefix }}request() {
+    if (!{{ prefix }}returned)
         return;
-    returned = false;
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange=function() {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            returned = true;
-            update(xmlhttp.responseText);
+    {{ prefix }}returned = false;
+    var {{ prefix }}xmlhttp = new XMLHttpRequest();
+    {{ prefix }}xmlhttp.onreadystatechange=function() {
+        if ({{ prefix }}xmlhttp.readyState == 4 && {{ prefix }}xmlhttp.status == 200) {
+            {{ prefix }}returned = true;
+            {{ prefix }}update({{ prefix }}xmlhttp.responseText);
         }
     };
-    var target = "{{ target_url }}";
-    xmlhttp.open("GET", target, true);
-    xmlhttp.send();
+    var {{ prefix }}target = "{{ target_url }}";
+    {{ prefix }}xmlhttp.open("GET", {{ prefix }}target, true);
+    {{ prefix }}xmlhttp.send();
 }
 
-function update(data) {
-    if (data != last_content) {
-        document.getElementById("{{ div }}").innerHTML = data;
-        last_content = data;
+function {{ prefix }}update({{ prefix }}data) {
+    if ({{ prefix }}data != {{ prefix }}last_content) {
+        document.getElementById("{{ div }}").innerHTML = {{ prefix }}data;
+        {{ prefix }}last_content = {{ prefix }}data;
     }
 }
 
+var {{ prefix }}f = window.onload;
 window.onload=function() {
-    window.setInterval(request, 1000 * {{ update_interval }});
+    {{ prefix }}f();
+    window.setInterval({{ prefix }}request, 1000 * {{ update_interval }});
 }
 

@@ -38,19 +38,19 @@ class Event(db.Model):
     __tablename__ = "events"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
-    date = db.Column(db.Date)
+    mode = db.Column(db.String)
     
-    def __init__(self, name, date):
+    def __init__(self, name, mode):
         self.name = name
-        self.date = date
+        self.mode = mode
     
     def __repr__(self):
-        return "<Event(id={}, name='{}', date={})>".format(
+        return "<Event(id={}, name='{}', mode='{}')>".format(
             self.id, 
             self.name, 
-            self.date
+            self.mode
         )
-
+    
 
 class Speaker(db.Model):
     __tablename__ = "speakers"
@@ -63,7 +63,7 @@ class Speaker(db.Model):
         self.event = event
     
     def __repr__(self):
-        return "<Speaker(id={}, name={}, event={})>".format(
+        return "<Speaker(id={}, name='{}', event={})>".format(
             self.id, 
             self.name,
             self.event

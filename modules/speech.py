@@ -13,62 +13,73 @@ import config
 
 speech = Blueprint("speech", __name__)
 
-def transpose(arr):
-    print(list)
-    return list(map(list, zip(*arr)))
-
 def query_statements(mode, event_id):
-    statements = []
-    if mode == "pending":
-        statements = db.session.query(Statement, Speaker, db.func.count(Statement.speaker).label("total")).group_by(Speaker.id).join(Speaker).filter(Statement.event == event_id).order_by("total ASC", Statement.insertion_time).all()
-    elif mode == "all":
-        statements = db.session.query(Statement, Speaker).join(Speaker).filter(Statement.event == event_id).order_by(Statement.insertion_time).all()
-    elif mode == "past":
-        statements = db.session.query(Statement, Speaker).join(Speaker).filter(Statement.executed == True).filter(Statement.event == event_id).order_by(Statement.execution_time).all()
-    return statements
+    statements = db.session.query(Statement).filter_by(event=event_id).all()
+    speakers = db.session.query(Speaker).filter_by(event=event_id).all()
+    if mode == "balanced" or mode == "pending":
+        count = { speaker.id: 0 for speaker in speakers }
+        for statement in statements:
+            if statement.speaker in count:
+                count[statement.speaker] += 1
+            else:
+                count[statement.speaker] = 1
+        sorted_speakers = sorted(speakers, key=lambda sp: count[sp.id])
+        result = []
+        for speaker in sorted_speakers:
+            pending_statements = [statement for statement in statements if statement.speaker == speaker.id and not statement.executed]
+            if len(pending_statements) > 0:
+                result.append((pending_statements[0], speaker, count[speaker.id]))
+        return result
+    
+    if mode == "fifo":
+        speaker_by_id = { speaker.id: speaker for speaker in speakers }
+        result = [(statement, speaker_by_id[statement.speaker], 0) for statement in statements if not statement.executed]
+        return result
+    
+    print("unknown querying mode {}".format(mode))
 
 @speech.route("/index")
 def index():
-    mode = request.args.get("mode", "pending")
     event_id = request.args.get("event", None) 
+    mode = request.args.get("mode", None)
     meta = []
     if event_id is not None and event_id != "-1":
         event = Event.query.filter_by(id=event_id).first()
         form = AddStatementForm()
         form.event.data = event.id
-        meta.append((query_statements(mode, event_id), form, event))
+        meta.append((query_statements(mode if mode is not None else event.mode, event_id), form, event))
     else:
         for event in Event.query.all():
             form = AddStatementForm()
             form.event.data = event.id
-            meta.append((query_statements(mode, event.id), form, event))
+            meta.append((query_statements(mode if mode is not None else event.mode, event.id), form, event))
         event_id = -1
-    return render_layout("speech_index.html", meta=meta, event_id=event_id)
+    return render_layout("speech_index.html", meta=meta, event_id=event_id, mode=mode)
 
 @speech.route("/show")
 def show():
-    mode = request.args.get("mode", "pending") 
     event_id = request.args.get("event", None)
+    mode = request.args.get("mode", None) 
     meta = []
     if event_id is not None and event_id is not "-1":
         event = Event.query.filter_by(id=event_id).first()
-        meta.append((query_statements(mode, event_id), event))
+        meta.append((query_statements(mode if mode is not None else event.mode, event_id), event))
     else:
         for event in Event.query.all():
-            meta.append((query_statements(mode, event.id), event))
+            meta.append((query_statements(mode if mode is not None else event.mode, event.id), event))
     return render_layout("speech_show.html", mode=mode, meta=meta, event_id=event_id)
 
 @speech.route("/update")
 def update():
-    mode = request.args.get("mode", "pending") 
     event_id = request.args.get("event", None)
+    mode = request.args.get("mode", None) 
     meta = []
     if event_id is not None and event_id != "-1":
         event = Event.query.filter_by(id=event_id).first()
-        meta.append((query_statements(mode, event_id), event))
+        meta.append((query_statements(mode if mode is not None else event.mode, event_id), event))
     else:
         for event in Event.query.all():
-            meta.append((query_statements(mode, event.id), event))
+            meta.append((query_statements(mode if mode is not None else event.mode, event.id), event))
     return render_layout("speech_content_show.html", mode=mode, meta=meta)
 
 
@@ -94,7 +105,7 @@ def add():
     statement = Statement(speaker.id, event_id)
     db.session.add(statement)
     db.session.commit()
-    mode = request.args.get("mode", "pending")
+    mode = request.args.get("mode", None)
     event_id = request.args.get("event", None)
     return redirect(url_for(request.args.get("next") or ".index", mode=mode, event=event_id))
 
@@ -111,7 +122,7 @@ def cancel():
     db.session.delete(statement)
     db.session.commit()
     flash("Statement canceled", "alert-success")
-    mode = request.args.get("mode", "pending")
+    mode = request.args.get("mode", None)
     return redirect(url_for(request.args.get("next") or ".index", mode=mode, event=event_id))
 
 @speech.route("/done")
@@ -127,15 +138,15 @@ def done():
         db.session.commit()
     else:
         flash("Statement already done", "alert-error")
-    mode = request.args.get("mode", "pending")
+    mode = request.args.get("mode", None)
     return redirect(url_for(request.args.get("next") or ".index", mode=mode, event=event_id))
 
 @speech.route("/update_show.js")
 def update_show_js():
     update_interval = config.UPDATE_SHOW_INTERVAL or 1
     div = "rede-content-div"
-    mode = request.args.get("mode", "pending")
+    mode = request.args.get("mode", None)
     event_id = request.args.get("event", -1)
     target_url = url_for(".update", mode=mode, event=event_id)
-    return render_layout("update.js", update_interval=update_interval, div=div, target_url=target_url)
+    return render_layout("update.js", update_interval=update_interval, div=div, target_url=target_url, prefix="update_show_")
 

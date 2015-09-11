@@ -32,14 +32,14 @@
             <thead>
                 <tr>
                     <th class="mdl-data-table__cell--non-numeric">Name</th>
-                    <th class="mdl-data-table__cell--non-numeric">Date</th>
+                    <th class="mdl-data-table__cell--non-numeric">Mode</th>
                 </tr>
             </thead>
             <tbody>
             {% for event in events %}
                 <tr>
                     <td class="mdl-data-table__cell--non-numeric"><a href="{{ url_for(".event_edit", id=event.id) }}">{{ event.name }}</a></td>
-                    <td class="mdl-data-table__cell--non-numeric">{{ event.date.strftime("%d.%m.%Y") }}</td>
+                    <td class="mdl-data-table__cell--non-numeric">{{ event.mode }}</td>
                 </tr>
             {% endfor %}
             </tbody>

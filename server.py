@@ -37,7 +37,7 @@ def index():
     events = Event.query.all()
     meta = []
     for event in events:
-        ls = [ (statement, speaker, count) for (statement, speaker, count) in speech.query_statements("pending", event.id) if not statement.executed ]
+        ls = speech.query_statements(event.mode, event.id)
         no_speaker = Speaker("No Speaker", event)
         no_statement = Statement(no_speaker, event)
         meta.append((ls[0] if len(ls) > 0 else (no_statement, no_speaker, ()), event))
@@ -48,7 +48,7 @@ def update():
     events = Event.query.all()
     meta = []
     for event in events:
-        ls = [ (statement, speaker, count) for (statement, speaker, count) in speech.query_statements("pending", event.id) if not statement.executed ]
+        ls = speech.query_statements(event.mode, event.id)
         no_speaker = Speaker("No Speaker", event)
         no_statement = Statement(no_speaker, event)
         meta.append((ls[0] if len(ls) > 0 else (no_statement, no_speaker, ()), event))
@@ -59,7 +59,7 @@ def update_js():
     update_interval = config.UPDATE_INDEX_INTERVAL or 1
     div = "rede-content-div"
     target_url = url_for(".update")
-    return render_layout("update.js", update_interval=update_interval, div=div, target=target_url)
+    return render_layout("update.js", update_interval=update_interval, div=div, target_url=target_url, prefix="index_")
 
 @app.route("/update_time")
 def update_time():
@@ -70,7 +70,7 @@ def update_time_js():
     update_interval = config.UPDATE_TIME_INTERVAL or 10
     div = "rede-time-div"
     target_url = url_for("update_time")
-    return render_layout("update.js", update_interval=update_interval, div=div, target_url=target_url)
+    return render_layout("update.js", update_interval=update_interval, div=div, target_url=target_url, prefix="time_")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

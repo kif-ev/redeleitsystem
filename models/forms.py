@@ -28,4 +28,4 @@ class AddStatementForm(Form):
 
 class NewEventForm(Form):
     name = StringField("Name", validators=[InputRequired("Entering the name is required.")])
-    date = DateField("Date (DD.MM.YYYY)", validators=[InputRequired("Entering the date is required.")], format="%d.%m.%Y")
+    mode = StringField("Mode", validators=[InputRequired("Entering the mode is required."), AnyOf(values=["balanced", "fifo"], message="Must be 'balanced' or 'fifo' atm.")])

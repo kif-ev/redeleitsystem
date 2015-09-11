@@ -8,7 +8,9 @@
             <thead>
                 <tr>
                     <th class="mdl-data-table__cell--non-numeric">Speaker</th>
+                    {% if (mode is not none and mode == "balanced") or (mode is none and event.mode == "balanced") %}
                     <th>Count</th>
+                    {% endif %}
                     {% if "user" in current_user.roles %}
                     <th class="mdl-data-table__cell--non-numeric">Done</th>
                     <th class="mdl-data-table__cell--non-numeric">Cancel</th>
@@ -17,14 +19,15 @@
             </thead>
             <tbody>
             {% for statement, speaker, count in statements %}
-                {% if not statement.executed %}
                 <tr>
                     <td class="mdl-data-table__cell--non-numeric">
                         <h5>{{ speaker.name }}</h5>
                     </td>
+                    {% if (mode is not none and mode == "balanced") or (mode is none and event.mode == "balanced") %}
                     <td>
                         <h5>{{ count }}</h5>
                     </td>
+                    {% endif %}
                     {% if "user" in current_user.roles %}
                     <td class="mdl-data-table__cell--non-numeric">
                         <a href="{{ url_for(".done", statement=statement.id, next=".index", event=event_id) }}">
@@ -42,7 +45,6 @@
                     </td>
                     {% endif %}
                 </tr>
-                {% endif %}
             {% endfor %}
             </tbody>
         </table>

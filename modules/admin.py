@@ -78,7 +78,7 @@ def event_new():
         if Event.query.filter_by(name=form.name.data).count() > 0:
             flash("There already is an event with that name.", "alert-error")
             return render_layout("admin_event_new.html", form=form)
-        event = Event(form.name.data, form.date.data)
+        event = Event(form.name.data, form.mode.data)
         db.session.add(event)
         db.session.commit()
         return redirect(url_for(".event"))
@@ -118,5 +118,4 @@ def event_edit():
 @admin_permission.require()
 def event():
     events = Event.query.all()
-    print(events)
     return render_layout("admin_event_index.html", events=events)

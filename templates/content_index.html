@@ -5,25 +5,15 @@
         </div>
         <div class="mdl-card__actions">
             {% if current_user.is_authenticated() and "user" in current_user.roles %}
-            <a href="{{ url_for("speech.index", event=event.id, mode="pending") }}">
+            <a href="{{ url_for("speech.index", event=event.id) }}">
                 <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
                     <i class="material-icons" role="presentation">build</i>
                 </button>
             </a>
             {% endif %}
-            <a href="{{ url_for("speech.show", event=event.id, mode="pending") }}">
-                <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-                    <i class="material-icons" role="presentation">announcement</i>
-                </button>
-            </a>
-            <a href="{{ url_for("speech.show", event=event.id, mode="all") }}">
+            <a href="{{ url_for("speech.show", event=event.id) }}">
                 <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
                     <i class="material-icons" role="presentation">list</i>
-                </button>
-            </a>
-            <a href="{{ url_for("speech.show", event=event.id, mode="past") }}">
-                <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-                    <i class="material-icons" role="presentation">schedule</i>
                 </button>
             </a>
         </div>
