@@ -11,20 +11,19 @@ function request() {
             update(xmlhttp.responseText);
         }
     };
-    var target = "{{ url_for('.update', mode=mode, event=event_id) }}";
+    var target = "{{ target_url }}";
     xmlhttp.open("GET", target, true);
     xmlhttp.send();
 }
 
 function update(data) {
     if (data != last_content) {
-        document.getElementById("rede-content-div").innerHTML = data;
+        document.getElementById("{{ div }}").innerHTML = data;
         last_content = data;
     }
 }
 
 window.onload=function() {
-    window.setInterval(request, 1000);
+    window.setInterval(request, 1000 * {{ update_interval }});
 }
-
 

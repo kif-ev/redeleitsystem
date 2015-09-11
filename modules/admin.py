@@ -1,11 +1,11 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, abort, send_file, Response
+from flask import Blueprint, redirect, url_for, request, flash, abort, send_file, Response
 from flask.ext.login import login_required
 from passlib.hash import pbkdf2_sha256
 
 from models.database import User, Event
 from models.forms import AdminUserForm, NewUserForm, NewEventForm
 
-from shared import db, admin_permission
+from shared import db, admin_permission, render_layout
 
 admin = Blueprint("admin", __name__)
 
@@ -16,14 +16,14 @@ admin = Blueprint("admin", __name__)
 def index():
     users = User.query.limit(10).all()
     events = Event.query.limit(10).all()
-    return render_template("admin_index.html", users=users, events=events)
+    return render_layout("admin_index.html", users=users, events=events)
 
 @admin.route("/user/")
 @login_required
 @admin_permission.require()
 def user():
     users = User.query.all()
-    return render_template("admin_user_index.html", users=users)
+    return render_layout("admin_user_index.html", users=users)
 
 @admin.route("/user/edit", methods=["GET", "POST"])
 @login_required
@@ -38,7 +38,7 @@ def user_edit():
             db.session.commit()
             return redirect(url_for(".index"))
         else:
-            return render_template("admin_user_edit.html", form=form, id=user_id)
+            return render_layout("admin_user_edit.html", form=form, id=user_id)
     else:
         return redirect(url_for(".index"))
             
@@ -66,7 +66,7 @@ def user_new():
         db.session.add(user)
         db.session.commit()
         return redirect(url_for(".user"))
-    return render_template("admin_user_new.html", form=form)
+    return render_layout("admin_user_new.html", form=form)
 
 
 @admin.route("/event/new", methods=["GET", "POST"])
@@ -77,12 +77,12 @@ def event_new():
     if form.validate_on_submit():
         if Event.query.filter_by(name=form.name.data).count() > 0:
             flash("There already is an event with that name.", "alert-error")
-            return render_template("admin_event_new.html", form=form)
+            return render_layout("admin_event_new.html", form=form)
         event = Event(form.name.data, form.date.data)
         db.session.add(event)
         db.session.commit()
         return redirect(url_for(".event"))
-    return render_template("admin_event_new.html", form=form)
+    return render_layout("admin_event_new.html", form=form)
 
 @admin.route("/event/delete")
 @login_required
@@ -109,7 +109,7 @@ def event_edit():
             db.session.commit()
             return redirect(url_for(".index"))
         else:
-            return render_template("admin_event_edit.html", form=form, id=event_id)
+            return render_layout("admin_event_edit.html", form=form, id=event_id)
     else:
         return redirect(url_for(".index"))
 
@@ -119,4 +119,4 @@ def event_edit():
 def event():
     events = Event.query.all()
     print(events)
-    return render_template("admin_event_index.html", events=events)
+    return render_layout("admin_event_index.html", events=events)

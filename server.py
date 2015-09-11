@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-from flask import Flask, g, current_app, request, render_template, session, flash, redirect, url_for, abort
+from flask import Flask, g, current_app, request, session, flash, redirect, url_for, abort
 from flask.ext.login import login_user, logout_user, login_required, current_user
 from flask.ext.principal import Principal, Identity, AnonymousIdentity, identity_changed, identity_loaded, UserNeed, RoleNeed
 from passlib.hash import pbkdf2_sha256
 
 import config
-from shared import db, login_manager
+from shared import db, login_manager, render_layout
 from models.forms import LoginForm, NewUserForm
 from models.database import User, Statement, Speaker, Event
 
@@ -41,7 +41,7 @@ def index():
         no_speaker = Speaker("No Speaker", event)
         no_statement = Statement(no_speaker, event)
         meta.append((ls[0] if len(ls) > 0 else (no_statement, no_speaker, ()), event))
-    return render_template("index.html", meta=meta)
+    return render_layout("index.html", meta=meta)
 
 @app.route("/update")
 def update():
@@ -52,11 +52,25 @@ def update():
         no_speaker = Speaker("No Speaker", event)
         no_statement = Statement(no_speaker, event)
         meta.append((ls[0] if len(ls) > 0 else (no_statement, no_speaker, ()), event))
-    return render_template("content_index.html", meta=meta)
+    return render_layout("content_index.html", meta=meta)
 
 @app.route("/update.js")
 def update_js():
-    return render_template("update_index.js")
+    update_interval = config.UPDATE_INDEX_INTERVAL or 1
+    div = "rede-content-div"
+    target_url = url_for(".update")
+    return render_layout("update.js", update_interval=update_interval, div=div, target=target_url)
+
+@app.route("/update_time")
+def update_time():
+    return render_layout("content_time.html")
+
+@app.route("/update_time.js")
+def update_time_js():
+    update_interval = config.UPDATE_TIME_INTERVAL or 10
+    div = "rede-time-div"
+    target_url = url_for("update_time")
+    return render_layout("update.js", update_interval=update_interval, div=div, target_url=target_url)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -70,7 +84,7 @@ def login():
             return redirect(request.args.get("next") or url_for(".index"))
         else:
             flash("Invalid username or wrong password", "alert-error")
-    return render_template("login.html", form=form)
+    return render_layout("login.html", form=form)
 
 @app.route("/logout", methods=["GET", "POST"])
 @login_required
@@ -89,14 +103,14 @@ def register():
         length = len(db.session.query(User).filter_by(username=form.username.data).all())
         if length > 0:
             flash("There already is a user with that name.")
-            return render_template("register.html", form=form)
+            return render_layout("register.html", form=form)
         password = pbkdf2_sha256.encrypt(form.password.data, rounds=200000, salt_size=16)
         user = User(fullname, username, password, [])
         db.session.add(user)
         db.session.commit()
         flash("Your account has been created, you may now log in with it.")
         return redirect(url_for(".login"))
-    return render_template("register.html", form=form)
+    return render_layout("register.html", form=form)
 
 @identity_loaded.connect_via(app)
 def on_identity_loaded(sender, identity):

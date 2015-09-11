@@ -1,13 +1,15 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, abort, send_file, Response
+from flask import Blueprint, redirect, url_for, request, flash, abort, send_file, Response
 from flask.ext.login import login_required
 
 from models.database import User, Statement, Speaker, Event
 from models.forms import AddStatementForm
 
-from shared import db, admin_permission, user_permission
+from shared import db, admin_permission, user_permission, render_layout
 
 from datetime import datetime
 import json
+
+import config
 
 speech = Blueprint("speech", __name__)
 
@@ -41,7 +43,7 @@ def index():
             form.event.data = event.id
             meta.append((query_statements(mode, event.id), form, event))
         event_id = -1
-    return render_template("speech_index.html", meta=meta, event_id=event_id)
+    return render_layout("speech_index.html", meta=meta, event_id=event_id)
 
 @speech.route("/show")
 def show():
@@ -54,7 +56,7 @@ def show():
     else:
         for event in Event.query.all():
             meta.append((query_statements(mode, event.id), event))
-    return render_template("speech_show.html", mode=mode, meta=meta, event_id=event_id)
+    return render_layout("speech_show.html", mode=mode, meta=meta, event_id=event_id)
 
 @speech.route("/update")
 def update():
@@ -67,7 +69,7 @@ def update():
     else:
         for event in Event.query.all():
             meta.append((query_statements(mode, event.id), event))
-    return render_template("speech_content_show.html", mode=mode, meta=meta)
+    return render_layout("speech_content_show.html", mode=mode, meta=meta)
 
 
 @speech.route("/add", methods=["GET", "POST"])
@@ -130,7 +132,10 @@ def done():
 
 @speech.route("/update_show.js")
 def update_show_js():
+    update_interval = config.UPDATE_SHOW_INTERVAL or 1
+    div = "rede-content-div"
     mode = request.args.get("mode", "pending")
     event_id = request.args.get("event", -1)
-    return render_template("update_show.js", mode=mode, event_id=event_id)
+    target_url = url_for(".update", mode=mode, event=event_id)
+    return render_layout("update.js", update_interval=update_interval, div=div, target_url=target_url)
 

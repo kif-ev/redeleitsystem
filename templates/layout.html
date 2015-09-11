@@ -12,6 +12,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
     <title>{% block title %}Unknown Page{% endblock %} - Redeleitsystem</title>
+    <script src="{{ url_for("update_time_js") }}" async></script>
     {% block additional_js %}
     <!-- Place to insert more .js-files -->
     {% endblock %}
@@ -22,6 +23,10 @@
     <header class="rede-header mdl-layout__header mdl-color--white mdl-color--grey-100 mdl-color-text--grey-600">
         <div class="mdl-layout__header-row">
             <a href="{{ url_for('index') }}"><span class="mdl-layout-title">Redeleitsystem</span></a>
+            <div class="mdl-layout-spacer"></div>
+            <span id="rede-time-div" class="mdl-layout-title">
+                {% include "content_time.html" %}
+            </span>
             <div class="mdl-layout-spacer"></div>
             <button class="mdl-button mdl-js-button mdl-js-ripple-effet mdl-button--icon" id="hdrbtn">
                 <i class="material-icons">more_vert</i>
