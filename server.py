@@ -52,7 +52,7 @@ def update():
         no_speaker = Speaker("No Speaker", event)
         no_statement = Statement(no_speaker, event)
         meta.append((ls[0] if len(ls) > 0 else (no_statement, no_speaker, ()), event))
-    return render_template("update_index.html", meta=meta)
+    return render_template("content_index.html", meta=meta)
 
 @app.route("/update.js")
 def update_js():

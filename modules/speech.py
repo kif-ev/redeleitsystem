@@ -67,7 +67,7 @@ def update():
     else:
         for event in Event.query.all():
             meta.append((query_statements(mode, event.id), event))
-    return render_template("speech_update_show.html", mode=mode, meta=meta)
+    return render_template("speech_content_show.html", mode=mode, meta=meta)
 
 
 @speech.route("/add", methods=["GET", "POST"])
