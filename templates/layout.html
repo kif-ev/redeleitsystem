@@ -3,19 +3,19 @@
 <head>
     {% block head %}
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.red-blue.min.css" /> 
-    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.0/material.min.js"></script>
-    <script src="{{ url_for('static', filename='js/sorttable.js') }}"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <meta name="description" content="moderation tool for handling speaking order">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="moderation tool for handling speaking order">
+    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.red-blue.min.css" /> 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
-    <title>{% block title %}Unknown Page{% endblock %} - Redeleitsystem</title>
+    <script src="{{ url_for('static', filename='js/material.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sorttable.js') }}"></script>
     <script src="{{ url_for("update_time_js") }}" async></script>
     {% block additional_js %}
     <!-- Place to insert more .js-files -->
     {% endblock %}
+    <title>{% block title %}Unknown Page{% endblock %} - Redeleitsystem</title>
     {% endblock %}
 </head>
 <body>
@@ -93,6 +93,5 @@
         {% endblock %}
         </div>
     </main>
-    <script src="http://www.getmdl.io/material.min.js"></script>
 </body>
 </html>
