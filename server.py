@@ -3,6 +3,8 @@
 from flask import Flask, g, current_app, request, session, flash, redirect, url_for, abort
 from flask.ext.login import login_user, logout_user, login_required, current_user
 from flask.ext.principal import Principal, Identity, AnonymousIdentity, identity_changed, identity_loaded, UserNeed, RoleNeed
+from flask.ext.script import Manager
+from flask.ext.migrate import Migrate, MigrateCommand
 from passlib.hash import pbkdf2_sha256
 
 import config
@@ -13,6 +15,9 @@ from models.database import User, Statement, Speaker, Event
 app = Flask(__name__)
 app.config.from_object(config)
 db.init_app(app)
+migrate = Migrate(app, db)
+manager = Manager(app)
+manager.add_command('db', MigrateCommand)
 login_manager.init_app(app)
 login_manager.login_view = "login"
 login_manager.login_message_category = "alert-error"
@@ -23,7 +28,6 @@ from modules import admin, speech
 
 app.register_blueprint(admin.admin, url_prefix="/admin")
 app.register_blueprint(speech.speech, url_prefix="/speech")
-db.create_all(app=app)
 
 @app.route("/")
 def index():
@@ -132,4 +136,4 @@ def load_user(user_id):
     return db.session.query(User).filter_by(id=user_id).first()
 
 if __name__ == "__main__":
-    app.run(debug=config.DEBUG)
+    manager.run()
