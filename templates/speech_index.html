@@ -2,9 +2,17 @@
 {% from "macros.html" import render_form %}
 {% block title %}Statements{% endblock %}
 
+{% block additional_js %}
+<script src="{{ url_for('static', filename='js/nextbutton.js') }}" async></script>
+{% endblock %}
+
+{% block additional_sidelinks %}
+<a href="#" class="mdl-navigation__link" onclick="setkeyhash()"><i class="mdl-colo-text--blue-grey-400 material-icons" role="presentation">keyboard</i>Set Next Key</a>
+{% endblock %}
+
 {% block content %}
     {% for statements, add_form, event in meta %}
-        <table class="mdl-data-table mdl-js-table mdl-shadow--2dp mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone sortable">
+        <table id="next-speaker-table" class="mdl-data-table mdl-js-table mdl-shadow--2dp mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone sortable">
             <thead>
                 <tr>
                     <th class="mdl-data-table__cell--non-numeric">Speaker</th>

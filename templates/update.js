@@ -27,5 +27,5 @@ var {{ prefix }}f = window.onload;
 window.onload=function() {
     {{ prefix }}f();
     window.setInterval({{ prefix }}request, 1000 * {{ update_interval }});
-}
+};
 

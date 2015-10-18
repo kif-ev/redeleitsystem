@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask, g, current_app, request, session, flash, redirect, url_for, abort
+from flask import Flask, g, current_app, request, session, flash, redirect, url_for, abort, render_template, Response
 from flask.ext.login import login_user, logout_user, login_required, current_user
 from flask.ext.principal import Principal, Identity, AnonymousIdentity, identity_changed, identity_loaded, UserNeed, RoleNeed
 from flask.ext.script import Manager
@@ -115,6 +115,10 @@ def register():
         flash("Your account has been created, you may now log in with it.")
         return redirect(url_for(".login"))
     return render_layout("register.html", form=form)
+
+@app.route("/icon-font.css")
+def icon_font():
+    return Response(render_template("icon-font.css"), mimetype="text/css")
 
 @identity_loaded.connect_via(app)
 def on_identity_loaded(sender, identity):
