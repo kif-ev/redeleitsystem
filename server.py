@@ -40,7 +40,7 @@ def addadmin():
         admin_hashed_pw = pbkdf2_sha256.encrypt(admin_pass, rounds=200000, salt_size=16)
         u = User(admin_real_name, admin_login, admin_hashed_pw, ["admin", "user"])
         db.session.add(u)
-        db.session.commit(u)
+        db.session.commit()
     else:
         print("The provided data was invalid.")
 
@@ -55,20 +55,13 @@ def adduser():
         admin_hashed_pw = pbkdf2_sha256.encrypt(admin_pass, rounds=200000, salt_size=16)
         u = User(admin_real_name, admin_login, admin_hashed_pw, ["user"])
         db.session.add(u)
-        db.session.commit(u)
+        db.session.commit()
     else:
         print("The provided data was invalid.")
 
 @app.route("/")
 def index():
-    if not len(db.session.query(User).all()) > 0:
-        fullname = input("Fullname for admin user:")
-        username = input("Username for admin user:")
-        password = pbkdf2_sha256.encrypt(input("Password for admin user:"), rounds=200000, salt_size=16)
-        user = User(fullname, username, password, ["admin", "user"])
-        db.session.add(user)
-        db.session.commit()
-    topics = Topic.query.all()
+   topics = Topic.query.all()
     meta = []
     for topic in topics:
         ls = speech.query_statements(topic.mode, topic.id)
