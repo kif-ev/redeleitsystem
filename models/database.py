@@ -39,12 +39,21 @@ class Event(db.Model):
     __tablename__ = "events"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
+    paused = db.Column(db.Boolean)
+    paused_until = db.Column(db.DateTime)
     
-    def __init__(self, name):
+    def __init__(self, name, paused=False):
         self.name = name
+        self.paused = paused
+        self.paused_until = datetime(1970, 1, 1)
     
     def __repr__(self):
-        return "<Event(id={}, name={})>".format(self.id, self.name)
+        return "<Event(id={}, name={}, paused={}, paused_until={})>".format(
+            self.id, 
+            self.name, 
+            self.paused,
+            self.paused_until
+        )
     
     def sorted_topics(self):
         return sorted(self.topics, key=lambda tp: tp.get_index())
