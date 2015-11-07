@@ -2,8 +2,8 @@ from flask import Blueprint, redirect, url_for, request, flash, abort, send_file
 from flask.ext.login import login_required
 from passlib.hash import pbkdf2_sha256
 
-from models.database import User, Topic
-from models.forms import AdminUserForm, NewUserForm, NewTopicForm
+from models.database import User, Topic, Event
+from models.forms import AdminUserForm, NewUserForm, NewTopicForm, NewEventForm
 
 from shared import db, admin_permission, render_layout
 
@@ -68,6 +68,59 @@ def user_new():
         return redirect(url_for(".user"))
     return render_layout("admin_user_new.html", form=form)
 
+@admin.route("/event/")
+@login_required
+@admin_permission.require()
+def event():
+    events = Event.query.all()
+    return render_layout("admin_event_index.html", events=events)
+
+
+@admin.route("/event/new", methods=["GET", "POST"])
+@login_required
+@admin_permission.require()
+def event_new():
+    form = NewEventForm()
+    if form.validate_on_submit():
+        if Topic.query.filter_by(name=form.name.data).count() > 0:
+            flash("There already is an event with that name.", "alert-error")
+            return render_layout("admin_event_new.html", form=form)
+        event = Event(form.name.data)
+        db.session.add(event)
+        db.session.commit()
+        return redirect(url_for(".event"))
+    return render_layout("admin_event_new.html", form=form)
+
+
+@admin.route("/event/delete")
+@login_required
+@admin_permission.require()
+def event_delete():
+    event_id = request.args.get("id", None)
+    if event_id is not None:
+        event  = Event.query.filter_by(id=event_id).first()
+        db.session.delete(event)
+        db.session.commit()
+        flash("Event deleted.", "alert-success")
+    return redirect(url_for(".event"))
+
+@admin.route("/event/edit", methods=["GET", "POST"])
+@login_required
+@admin_permission.require()
+def event_edit():
+    event_id = request.args.get("id", None)
+    if event_id is not None:
+        event = db.session.query(Event).filter_by(id=event_id).first()
+        form = NewEventForm(obj=topic)
+        if form.validate_on_submit():
+            form.populate_obj(topic)
+            db.session.commit()
+            return redirect(url_for(".index"))
+        else:
+            return render_layout("admin_event_edit.html", form=form, id=event_id)
+    else:
+        return redirect(url_for(".index"))
+
 
 @admin.route("/topic/new", methods=["GET", "POST"])
 @login_required
@@ -78,7 +131,7 @@ def topic_new():
         if Topic.query.filter_by(name=form.name.data).count() > 0:
             flash("There already is an topic with that name.", "alert-error")
             return render_layout("admin_topic_new.html", form=form)
-        topic = Topic(form.name.data, form.mode.data)
+        topic = Topic(form.name.data, form.mode.data, form.event_id.data)
         db.session.add(topic)
         db.session.commit()
         return redirect(url_for(".topic"))
@@ -87,7 +140,7 @@ def topic_new():
 @admin.route("/topic/delete")
 @login_required
 @admin_permission.require()
-def topc_delete():
+def topic_delete():
     topic_id = request.args.get("id", None)
     if topic_id is not None:
         topic  = Topic.query.filter_by(id=topic_id).first()

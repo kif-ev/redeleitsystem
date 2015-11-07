@@ -26,6 +26,10 @@ class AddStatementForm(Form):
     speaker_name = StringField("Speaker", validators=[InputRequired("Entering the speaker is required.")])
     topic = HiddenField("Topic")
 
+class NewEventForm(Form):
+    name = StringField("Name", validators=[InputRequired("Entering the name is required.")])
+
 class NewTopicForm(Form):
     name = StringField("Name", validators=[InputRequired("Entering the name is required.")])
     mode = StringField("Mode", validators=[InputRequired("Entering the mode is required."), AnyOf(values=["balanced", "fifo"], message="Must be 'balanced' or 'fifo' atm.")])
+    event_id = HiddenField("Event_ID")
