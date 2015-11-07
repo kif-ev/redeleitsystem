@@ -3,7 +3,7 @@
 from flask import Flask, g, current_app, request, session, flash, redirect, url_for, abort, render_template, Response
 from flask.ext.login import login_user, logout_user, login_required, current_user
 from flask.ext.principal import Principal, Identity, AnonymousIdentity, identity_changed, identity_loaded, UserNeed, RoleNeed
-from flask.ext.script import Manager
+from flask.ext.script import Manager, prompt, prompt_pass
 from flask.ext.migrate import Migrate, MigrateCommand
 from passlib.hash import pbkdf2_sha256
 
@@ -28,6 +28,36 @@ from modules import admin, speech
 
 app.register_blueprint(admin.admin, url_prefix="/admin")
 app.register_blueprint(speech.speech, url_prefix="/speech")
+
+@manager.command
+def addadmin():
+    """Add a new administrative user to the system"""
+    print("Adding new administrative user:")
+    admin_real_name = prompt("Real name")
+    admin_login = prompt("Username")
+    admin_pass = prompt_pass("Password")
+    if admin_real_name is not None and admin_login is not None and admin_pass is not None:
+        admin_hashed_pw = pbkdf2_sha256.encrypt(admin_pass, rounds=200000, salt_size=16)
+        u = User(admin_real_name, admin_login, admin_hashed_pw, ["admin", "user"])
+        db.session.add(u)
+        db.session.commit(u)
+    else:
+        print("The provided data was invalid.")
+
+@manager.command
+def adduser():
+    """Add a new user to the system"""
+    print("Adding new user:")
+    admin_real_name = prompt("Real name")
+    admin_login = prompt("Username")
+    admin_pass = prompt_pass("Password")
+    if admin_real_name is not None and admin_login is not None and admin_pass is not None:
+        admin_hashed_pw = pbkdf2_sha256.encrypt(admin_pass, rounds=200000, salt_size=16)
+        u = User(admin_real_name, admin_login, admin_hashed_pw, ["user"])
+        db.session.add(u)
+        db.session.commit(u)
+    else:
+        print("The provided data was invalid.")
 
 @app.route("/")
 def index():
