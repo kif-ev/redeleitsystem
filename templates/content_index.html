@@ -4,8 +4,8 @@
             <h3 class="mdl-card__title-text">{{ topic.name }}: {{ speaker.name }}</h3>
         </div>
         <div class="mdl-card__actions">
-            {% if current_user.is_authenticated() and "user" in current_user.roles %}
-            <a href="{{ url_for("speech.index", topic=event.id) }}">
+            {% if current_user.is_authenticated and "user" in current_user.roles %}
+            <a href="{{ url_for("speech.index", event=event.id) }}">
                 <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
                     <i class="material-icons" role="presentation">build</i>
                 </button>

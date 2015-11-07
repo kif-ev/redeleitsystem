@@ -76,7 +76,7 @@ def event():
     return render_layout("admin_event_index.html", events=events)
         
 
-@admin.route("/even/show")
+@admin.route("/event/show")
 @login_required
 @admin_permission.require()
 def event_show():
