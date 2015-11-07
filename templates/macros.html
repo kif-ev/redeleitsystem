@@ -104,7 +104,7 @@
 {%- endmacro %}
 
 
-{% macro render_form(form, action_url="", title=None, action_text="Submit", class_="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--4-col-phone", title_class="mdl-card__title", title_text_class="mdl-card__title-text", content_class="mdl-card__supporting-text", action_class="mdl-card__actions", btn_class="mdl-button mdl-js-button mdl-button--raised mdl-button-colored") -%}
+{% macro render_form(form, action_url="", title=None, action_text="Submit", class_="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--4-col-phone", title_class="mdl-card__title", title_text_class="mdl-card__title-text", content_class="mdl-card__supporting-text", action_class="mdl-card__actions", btn_class="mdl-button mdl-js-button mdl-button--raised mdl-button-colored", btn_value="", btn_list=None) -%}
     <div class="{{ class_ }}">
         <form method="POST" action="{{ action_url }}">
             <div class="{{ title_class }}">
@@ -133,8 +133,16 @@
                 {% endfor %}
             </div>
             <div class="{{ action_class }}">
-                <button type="submit" class="{{ btn_class }}">{{ action_text }}</button>
+                {% if btn_list != none %}
+                    {%for this_btn_class, action_text, btn_value in btn_list %}
+	                <button type="submit" class="{{ btn_class }} {{ this_btn_class }}", value="{{ btn_value }}">{{ action_text }}</button>
+                    {% endfor %}
+		{% else %}
+                <button type="submit" class="{{ btn_class }}", value="{{ btn_value }}">{{ action_text }}</button>
+                {% endif %}
+                
             </div>
         </form>
     </div>
 {%- endmacro %}
+
