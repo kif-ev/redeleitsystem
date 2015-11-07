@@ -143,7 +143,8 @@ def topic_show():
         topic = Topic.query.filter_by(id=topic_id).first()
         form = AddStatementForm()
         form.topic.data = topic.id
-        return render_layout("admin_topic_show.html", topic=topic, form=form)
+        statements = topic.sorted_statements()
+        return render_layout("admin_topic_show.html", topic=topic, form=form, statements=statements)
     return redirect(url_for(".index"))
         
 

@@ -35,11 +35,17 @@
             </tbody>
         </table>
     </div>
+    <div class="mdl-separator rede-separator"></div>
     <div class="mdl-cell mdl-cell--3-col mdl-cell--3-col-tablet mdl-cell--4-col-phone mdl-grid mdl-grid--no-spacing">
         {{ render_form(form, action_url=url_for(".statement_new"), action_text="Add", title="Add Statement", class_="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone") }}
         <div class="mdl-cell mdl-card mdl-shadow--2dp mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-            <ul class="mdl-menu">
-                <li class="mdl-menu__item"><a class="mdl-navigation__link" href="{{ url_for(".statement_undo") }}"><i class="material-icons" role="presentation">undo</i>Undo</a></li>
+            <ul>
+                {% if topic.sorted_statements()|length() > 0 %}
+                <li>
+                    <a href="{{ url_for(".statement_done", id=topic.sorted_statements()[0].id, topic_id=topic.id) }}" class="rede-href"><i class="material-icons" role="presentation">redo</i> Next</a>
+                </li>
+                {% endif %}
+                <li><a href="{{ url_for(".statement_undo") }}" class="rede-href"><i class="material-icons" role="presentation">undo</i> Previous</a></li>
             </ul>
         </div>
     </div>

@@ -83,7 +83,6 @@
     background-color: #00BCD4;
     color: #37474F;
 }
-
 .rede-navigation .mdl-navigation__link .material-icons {
     font-size: 24px;
     color: rgba(255, 255, 255, 0.56);
@@ -104,4 +103,9 @@
 
 .md-48 {
     font-size: 48px;
+}
+
+.rede-href {
+    text-decoration: none;
+    vertical-align: text-top;
 }
