@@ -144,7 +144,8 @@ def topic_show():
         form = AddStatementForm()
         form.topic.data = topic.id
         statements = topic.sorted_statements()
-        return render_layout("admin_topic_show.html", topic=topic, form=form, statements=statements)
+        topics = topic.event.sorted_topics()
+        return render_layout("admin_topic_show.html", topic=topic, form=form, statements=statements, topics=topics)
     return redirect(url_for(".index"))
         
 
@@ -160,7 +161,7 @@ def topic_new():
         topic = Topic(form.name.data, form.mode.data, form.event_id.data)
         db.session.add(topic)
         db.session.commit()
-        return redirect(url_for(".topic"))
+        return redirect(url_for(".event", id=topic.event.id))
     event_id = request.args.get("event_id", None)
     if event_id is None:
         return redirect(url_for(".index"))
@@ -203,6 +204,37 @@ def topic():
     topics = Topic.query.all()
     return render_layout("admin_topic_index.html", topics=topics)
 
+@admin.route("/topic/swap/up")
+@login_required
+@admin_permission.require()
+def topic_swap_up():
+    topic_id = request.args.get("id", None)
+    original_id = request.args.get("original", None)
+    if topic_id is not None:
+        topic = Topic.query.filter_by(id=topic_id).first()
+        topics = topic.event.sorted_topics()
+        index = topics.index(topic)
+        if index != 0:
+            topic.swap_topics(topics[index-1])
+            db.session.commit()
+        return redirect(url_for(".topic_show", id=original_id))
+    return redirect(url_for(".index"))
+
+@admin.route("/topic/swap/down")
+@login_required
+@admin_permission.require()
+def topic_swap_down():
+    topic_id = request.args.get("id", None)
+    original_id = request.args.get("original", None)
+    if topic_id is not None:
+        topic = Topic.query.filter_by(id=topic_id).first()
+        topics = topic.event.sorted_topics()
+        index = topics.index(topic)
+        if index != len(topics) - 1:
+            topic.swap_topics(topics[index+1])
+            db.session.commit()
+        return redirect(url_for(".topic_show", id=original_id))
+    return redirect(url_for(".index"))
 
 @admin.route("/speaker/rename", methods=["GET", "POST"])
 @login_required
@@ -286,7 +318,10 @@ def statement_delete():
 @login_required
 @admin_permission.require()
 def statement_undo():
-    statement = Statement.query.filter_by(executed=True).order_by(db.desc(Statement.execution_time)).first()
-    statement.undo()
-    db.session.commit()
-    return redirect(url_for(".topic_show", id=statement.topic.id))
+    topic_id = request.args.get("topic_id", None)
+    if statement_id is not None:
+        statement = Statement.query.filter_by(executed=True).order_by(db.desc(Statement.execution_time)).first()
+        statement.undo()
+        db.session.commit()
+    return redirect(url_for(".topic_show", id=topic_id))
+

@@ -7,9 +7,13 @@
         <table class="mdl-data-table mdl-js-table mdl-shadow--2dp mdl-cell mdl-cell--12-col">
             <thead>
                 <tr>
+                    <th class="mdl-data-table__cell-non-numeric rede-large-text">{{ topic.name }}</th>
+                    <th class="mdl-data-table__cell-non-numeric rede-medium-text" colspan=2>{{ topic.mode }}</th>
+                    <th class="mdl-data-table__cell-non-numeric rede-medium-text"><a href="{{ url_for(".topic_edit", id=topic.id) }}"><i class="material-icons">edit</i></a></th>
+                </tr>
+                <tr>
                     <th class="mdl-data-table__cell--non-numeric">Speaker</th>
-                    <th class="mdl-data-table__cell--non-numeric">Topic</th>
-                    <th class="mdl-data-table__cell--non-numeric">Count</th>
+                    <th class="mdl-data-table__cell">Count</th>
                     <th class="mdl-data-table__cell--non-numeric">Done</th>
                     <th class="mdl-data-table__cell--non-numeric">Edit</th>
                     <th class="mdl-data-table__cell--non-numeric">Remove</th>
@@ -19,8 +23,7 @@
             {% for statement in topic.sorted_statements() %}
                 <tr>
                     <td class="mdl-data-table__cell--non-numeric">{{ statement.speaker.identifier() }}</td>
-                    <td class="mdl-data-table__cell--non-numeric">{{ statement.topic.name }}</td>
-                    <td class="mdl-data-table__cell--non-numeric">{{ statement.speaker.count(statement.topic) }}</td>
+                    <td class="mdl-data-table__cell">{{ statement.speaker.count(statement.topic) }}</td>
                     <td class="mdl-data-table__cell--non-numeric">
                         <a href="{{ url_for(".statement_done", id=statement.id, topic_id=topic.id) }}">
                             <i class="material-icons">done</i>
@@ -46,14 +49,39 @@
     <div class="mdl-cell mdl-cell--3-col mdl-cell--3-col-tablet mdl-cell--4-col-phone mdl-grid mdl-grid--no-spacing">
         {{ render_form(form, action_url=url_for(".statement_new"), action_text="Add", title="Add Statement", class_="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone", btn_list=[("","Add Statement","add_statement"),  ("redl-btn-meta","Add Meta","add_meta_statement")] ) }}
         <div class="mdl-cell mdl-card mdl-shadow--2dp mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-            <ul>
+            <ul class="rede-list-no-bullet">
                 {% if topic.sorted_statements()|length() > 0 %}
                 <li>
                     <a href="{{ url_for(".statement_done", id=topic.sorted_statements()[0].id, topic_id=topic.id) }}" class="rede-href"><i class="material-icons" role="presentation">redo</i> Next</a>
                 </li>
                 {% endif %}
                 <li><a href="{{ url_for(".statement_undo") }}" class="rede-href"><i class="material-icons" role="presentation">undo</i> Previous</a></li>
+                <li><a href="{{ url_for(".topic_show", id=topic.get_next_index()) }}"><i class="material-icons">arrow_forward</i> Next Topic</a></li>
             </ul>
         </div>
+    </div>
+    <div class="mdl-cell mdl-cell--3-col mdl-cell--3-col-tablet mdl-cell--4-col-phone mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h4 class="mdl-card__title-text">Topics</h4>
+        </div>
+        <table>
+        {% for t in topics %}
+            <tr class="{% if t == topic %}rede-list-point-big{% else %}rede-list-point-normal{% endif %}">
+                <td>
+                    {% if t != topics[0] %}
+                    <a href="{{ url_for(".topic_swap_up", id=t.id, original=topic.id) }}"><i class="material-icons">keyboard_arrow_up</i></a>
+                    {% endif %}
+                </td>
+                <td>
+                    {{ t.name }}
+                </td>
+                <td>
+                    {% if t != topics[-1] %}
+                    <a href="{{ url_for(".topic_swap_down", id=t.id, original=topic.id) }}"><i class="material-icons">keyboard_arrow_down</i></a>
+                    {% endif %}
+                </td>
+            <tr>
+        {% endfor %}
+        </table>
     </div>
 {% endblock %}

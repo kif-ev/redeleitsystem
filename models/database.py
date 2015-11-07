@@ -45,6 +45,9 @@ class Event(db.Model):
     
     def __repr__(self):
         return "<Event(id={}, name={})>".format(self.id, self.name)
+    
+    def sorted_topics(self):
+        return sorted(self.topics, key=lambda tp: tp.get_index())
 
 class Topic(db.Model):
     __tablename__ = "topics"
@@ -52,19 +55,23 @@ class Topic(db.Model):
     name = db.Column(db.String, unique=True)
     mode = db.Column(db.String)
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"), nullable=False)
+    index = db.Column(db.Integer)
+    
     event = relationship("Event", backref=backref("topics",order_by=id))
     
     def __init__(self, name, mode, event_id):
         self.name = name
         self.mode = mode
         self.event_id = event_id
+        self.index = None
     
     def __repr__(self):
-        return "<Topic(id={}, name='{}', mode='{}', event_id={})>".format(
+        return "<Topic(id={}, name='{}', mode='{}', event_id={}, index={})>".format(
             self.id, 
             self.name, 
             self.mode,
-            self.event_id
+            self.event_id,
+            self.index
         )
     
     def sorted_statements(self):
@@ -76,6 +83,20 @@ class Topic(db.Model):
         else:
             return statements
     
+    def swap_topics(self, other):
+        other.index, self.index = self.get_index(), other.get_index()
+
+    def get_index(self):
+        if self.index == None:
+            return self.id
+        return self.index
+    
+    def get_next_index(self):
+        topics = self.event.sorted_topics()
+        i = topics.index(self) + 1
+        if i >= len(topics):
+            i = -1
+        return topics[i].id
 
 class Speaker(db.Model):
     __tablename__ = "speakers"
