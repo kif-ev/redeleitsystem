@@ -4,6 +4,8 @@ from datetime import datetime
 
 from shared import db
 
+from sqlalchemy.orm import relationship, backref
+
 class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
@@ -32,13 +34,20 @@ class User(db.Model, UserMixin):
             self.temp_key,
             self.temp_key_timestamp
         )
-
+        
+class Event(db.Model):
+    __tablename__ = "events"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, unique=True)
 
 class Topic(db.Model):
     __tablename__ = "topics"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
     mode = db.Column(db.String)
+    event_id = db.Column(db.Integer, db.ForeignKey("events.id"), nullable=False)
+    event = relationship("Event", backref=backref("topics",order_by=id))
+    
     
     def __init__(self, name, mode):
         self.name = name
@@ -56,7 +65,8 @@ class Speaker(db.Model):
     __tablename__ = "speakers"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
-    event = db.Column(db.Integer, db.ForeignKey("events.id"), nullable=False)
+    event_id = db.Column(db.Integer, db.ForeignKey("events.id"), nullable=False)
+    event = relationship("Event", backref=backref("speakers",order_by=id))
     
     def __init__(self, name, event):
         self.name = name
@@ -73,8 +83,12 @@ class Speaker(db.Model):
 class Statement(db.Model):
     __tablename__ = "statements"
     id = db.Column(db.Integer, primary_key=True)
-    speaker = db.Column(db.Integer, db.ForeignKey("speakers.id"), nullable=False)
-    event = db.Column(db.Integer, db.ForeignKey("events.id"), nullable=False)
+    speaker_id = db.Column(db.Integer, db.ForeignKey("speakers.id"), nullable=False)
+    event_id = db.Column(db.Integer, db.ForeignKey("events.id"), nullable=False)
+    
+    speaker = relationship("Speaker", backref=backref("statements",order_by=id))
+    event = relationship("Event", backref=backref("statements",order_by=id))
+    
     insertion_time = db.Column(db.DateTime)
     executed = db.Column(db.Boolean)
     execution_time = db.Column(db.DateTime)
