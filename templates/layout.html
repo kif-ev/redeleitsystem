@@ -44,7 +44,7 @@
         <header class="rede-drawer-header">
             <div class="rede-account-dropdown">
                 <span>
-                {% if current_user.is_authenticated %}
+                {% if current_user.is_authenticated() %}
                     <p class="md-24">
                         <i class="material-icons md-48">
                             {% if "user" in current_user.roles and not "admin" in current_user.roles %}
@@ -69,7 +69,7 @@
                 </button>
                 </span>
                 <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effet" for="accbtn">
-                    {% if current_user.is_authenticated %}
+                    {% if current_user.is_authenticated() %}
                     <li class="mdl-menu__item"><a class="mdl-navigation__link" href="{{ url_for("logout") }}">Logout</a></li>
                     {% else %}
                     <li class="mdl-menu__item"><a class="mdl-navigation__link" href="{{ url_for("login") }}">Login</a></li>
@@ -83,7 +83,7 @@
             <a class="mdl-navigation__link" href="{{ url_for("speech.index") }}"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">build</i>Handle speakers</a>
             {% endif %}
             <a class="mdl-navigation__link" href="{{ url_for("speech.show") }}"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">announcement</i>Pending speakers</a>
-            {% if current_user.is_authenticated and "admin" in current_user.roles %}
+            {% if current_user.is_authenticated() and "admin" in current_user.roles %}
             <a class="mdl-navigation__link" href="{{ url_for("admin.index") }}"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">computer</i>Administration</a>
             {% block additional_sidelinks %}
             <!-- put your additional sidelinks here -->
