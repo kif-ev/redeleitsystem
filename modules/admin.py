@@ -189,7 +189,7 @@ def topic_edit():
         if form.validate_on_submit():
             form.populate_obj(topic)
             db.session.commit()
-            return redirect(url_for(".index"))
+            return redirect(url_for(".topic_show", id=topic.id))
         else:
             return render_layout("admin_topic_edit.html", form=form, id=topic_id)
     else:
@@ -280,3 +280,11 @@ def statement_delete():
         return redirect(url_for(".topic_show", id=topic_id))
     return redirect(url_for(".index"))
 
+@admin.route("/statement/undo")
+@login_required
+@admin_permission.require()
+def statement_undo():
+    statement = Statement.query.filter_by(executed=True).order_by(db.desc(Statement.execution_time)).first()
+    statement.undo()
+    db.session.commit()
+    return redirect(url_for(".topic_show", id=statement.topic.id))

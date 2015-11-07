@@ -148,3 +148,8 @@ class Statement(db.Model):
         self.execution_time = datetime.now()
         return True
     
+    def undo(self):
+        if not self.executed:
+            return False
+        self.executed = False
+        self.execution_time = datetime(1970, 1, 1)
