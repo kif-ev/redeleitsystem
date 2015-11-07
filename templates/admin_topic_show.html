@@ -57,6 +57,40 @@
                 {% endif %}
                 <li><a href="{{ url_for(".statement_undo") }}" class="rede-href"><i class="material-icons" role="presentation">undo</i> Previous</a></li>
                 <li><a href="{{ url_for(".topic_show", id=topic.get_next_index()) }}"><i class="material-icons">arrow_forward</i> Next Topic</a></li>
+                <li><a href="{{ url_for(".topic_show", id=topic.get_previous_index()) }}"><i class="material-icons">arrow_backward</i>Previous Topic</a></li>
+                <li>
+                    <form action="{{ url_for(".pause", id=topic.event.id, original=topic.id) }}" method="POST">
+                        <button class="mdl-button">
+                            {% if topic.event.paused %}
+                            <i class="material-icons">play_arrow</i>
+                            Resume
+                            {% else %}
+                            <i class="material-icons">pause</i>
+                            Pause
+                            {% endif %}
+                        </button>
+                        {% if not topic.event.paused %}
+                        <input name="timeslider" class="mdl-slider mdl-js-slider" type="range" min="0" max="3600" value="300" step="30" onchange="settimesliderresult(this);">
+                        <script>
+                        function settimesliderresult(slider) {
+                            var div = document.getElementById("timesliderresult");
+                            var time = slider.value;
+                            var text = "";
+                            if (Math.floor(time / 3600) > 0) {
+                                text += Math.floor(time / 3600) + "h";
+                                time %= 3600;
+                            }
+                            if (Math.floor(time / 60) > 0) {
+                                text += Math.floor(time / 60) + "m";
+                                time %= 60;
+                            }
+                            text += time + "s";
+                            div.innerHTML = text;
+                        }
+                        </script>
+                        <div id="timesliderresult"></div>
+                        {% endif %}
+                </li>
             </ul>
         </div>
     </div>

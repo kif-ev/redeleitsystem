@@ -2,6 +2,8 @@ from flask import Blueprint, redirect, url_for, request, flash, abort, send_file
 from flask.ext.login import login_required
 from passlib.hash import pbkdf2_sha256
 
+from datetime import datetime, timedelta
+
 from models.database import User, Topic, Event, Speaker, Statement
 from models.forms import AdminUserForm, NewUserForm, NewTopicForm, NewEventForm, AddStatementForm, EditSpeakerForm
 
@@ -331,3 +333,22 @@ def statement_undo():
         db.session.commit()
     return redirect(url_for(".topic_show", id=topic_id))
 
+@admin.route("/pause", methods=["GET", "POST"])
+@login_required
+@admin_permission.require()
+def pause():
+    event_id = request.args.get("id", None)
+    if event_id is not None:
+        event = Event.query.filter_by(id=event_id).first()
+        if event is not None:
+            if event.paused_until == None:
+                event.paused_until = datetime(1970, 1, 1)
+            event.paused = not event.paused
+            if event.paused:
+                rawtime = float(request.form["timeslider"])
+                delta = timedelta(seconds=rawtime)
+                print(delta)
+                event.paused_until += delta    
+            db.session.commit()
+    topic_id = request.args.get("original", None)
+    return redirect(url_for(".topic_show", id=topic_id))
