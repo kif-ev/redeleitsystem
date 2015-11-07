@@ -61,7 +61,7 @@ def adduser():
 
 @app.route("/")
 def index():
-   topics = Topic.query.all()
+    topics = Topic.query.all()
     meta = []
     for topic in topics:
         ls = speech.query_statements(topic.mode, topic.id)
