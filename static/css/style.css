@@ -109,3 +109,17 @@
     text-decoration: none;
     vertical-align: text-top;
 }
+
+th.rede-large-text {
+    font-size: 18pt;
+}
+
+th.rede-medium-text {
+    font-size: 18pt;
+    color: darkred;
+}
+
+.rede-list-no-bullet {
+    list-style-type: none;
+    padding-left: 1pc;
+}

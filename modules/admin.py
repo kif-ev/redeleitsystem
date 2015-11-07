@@ -286,7 +286,9 @@ def statement_delete():
 @login_required
 @admin_permission.require()
 def statement_undo():
-    statement = Statement.query.filter_by(executed=True).order_by(db.desc(Statement.execution_time)).first()
-    statement.undo()
-    db.session.commit()
-    return redirect(url_for(".topic_show", id=statement.topic.id))
+    topic_id = request.args.get("topic_id", None)
+    if statement_id is not None:
+        statement = Statement.query.filter_by(executed=True).order_by(db.desc(Statement.execution_time)).first()
+        statement.undo()
+        db.session.commit()
+    return redirect(url_for(".topic_show", id=topic_id))

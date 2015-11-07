@@ -7,9 +7,13 @@
         <table class="mdl-data-table mdl-js-table mdl-shadow--2dp mdl-cell mdl-cell--12-col">
             <thead>
                 <tr>
+                    <th class="mdl-data-table__cell-non-numeric rede-large-text">{{ topic.name }}</th>
+                    <th class="mdl-data-table__cell-non-numeric rede-medium-text" colspan=2>{{ topic.mode }}</th>
+                    <th class="mdl-data-table__cell-non-numeric rede-medium-text"><a href="{{ url_for(".topic_edit", id=topic.id) }}"><i class="material-icons">edit</i></a></th>
+                </tr>
+                <tr>
                     <th class="mdl-data-table__cell--non-numeric">Speaker</th>
-                    <th class="mdl-data-table__cell--non-numeric">Topic</th>
-                    <th class="mdl-data-table__cell--non-numeric">Count</th>
+                    <th class="mdl-data-table__cell">Count</th>
                     <th class="mdl-data-table__cell--non-numeric">Done</th>
                     <th class="mdl-data-table__cell--non-numeric">Edit</th>
                     <th class="mdl-data-table__cell--non-numeric">Remove</th>
@@ -19,8 +23,7 @@
             {% for statement in topic.sorted_statements() %}
                 <tr>
                     <td class="mdl-data-table__cell--non-numeric">{{ statement.speaker.identifier() }}</td>
-                    <td class="mdl-data-table__cell--non-numeric">{{ statement.topic.name }}</td>
-                    <td class="mdl-data-table__cell--non-numeric">{{ statement.speaker.count(statement.topic) }}</td>
+                    <td class="mdl-data-table__cell">{{ statement.speaker.count(statement.topic) }}</td>
                     <td class="mdl-data-table__cell--non-numeric">
                         <a href="{{ url_for(".statement_done", id=statement.id, topic_id=topic.id) }}">
                             <i class="material-icons">done</i>
@@ -46,7 +49,7 @@
     <div class="mdl-cell mdl-cell--3-col mdl-cell--3-col-tablet mdl-cell--4-col-phone mdl-grid mdl-grid--no-spacing">
         {{ render_form(form, action_url=url_for(".statement_new"), action_text="Add", title="Add Statement", class_="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone") }}
         <div class="mdl-cell mdl-card mdl-shadow--2dp mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-            <ul>
+            <ul class="rede-list-no-bullet">
                 {% if topic.sorted_statements()|length() > 0 %}
                 <li>
                     <a href="{{ url_for(".statement_done", id=topic.sorted_statements()[0].id, topic_id=topic.id) }}" class="rede-href"><i class="material-icons" role="presentation">redo</i> Next</a>
