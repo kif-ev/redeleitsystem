@@ -97,6 +97,13 @@ class Topic(db.Model):
         if i >= len(topics):
             i = -1
         return topics[i].id
+    
+    def get_previous_index(self):
+        topics = self.event.sorted_topics()
+        i = topics.index(self) - 1
+        if i >= len(topics):
+            i = 0
+        return topics[i].id
 
 class Speaker(db.Model):
     __tablename__ = "speakers"
