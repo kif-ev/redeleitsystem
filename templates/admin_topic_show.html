@@ -44,7 +44,7 @@
     </div>
     <div class="mdl-separator rede-separator"></div>
     <div class="mdl-cell mdl-cell--3-col mdl-cell--3-col-tablet mdl-cell--4-col-phone mdl-grid mdl-grid--no-spacing">
-        {{ render_form(form, action_url=url_for(".statement_new"), action_text="Add", title="Add Statement", class_="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone") }}
+        {{ render_form(form, action_url=url_for(".statement_new"), action_text="Add", title="Add Statement", class_="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone", btn_list=[("","Add Statement","add_statement"),  ("redl-btn-meta","Add Meta","add_meta_statement")] ) }}
         <div class="mdl-cell mdl-card mdl-shadow--2dp mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
             <ul>
                 {% if topic.sorted_statements()|length() > 0 %}
