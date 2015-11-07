@@ -25,7 +25,7 @@ class User(db.Model, UserMixin):
         self.temp_key_timestamp = datetime(1970, 1, 1, 0, 0)
     
     def __repr__(self):
-        return "<User(id={}, fullname='{}', username='{}', password'{}', roles{}, temp_key='{}', temp_key_timestamp={})>".format(
+        return "<User(id={}, fullname='{}', username='{}', password='{}', roles={}, temp_key='{}', temp_key_timestamp={})>".format(
             self.id, 
             self.fullname, 
             self.username, 
