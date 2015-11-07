@@ -32,21 +32,31 @@
             <thead>
                 <tr>
                     <th class="mdl-data-table__cell--non-numeric">Name</th>
-                    <th class="mdl-data-table__cell--non-numeric">Mode</th>
+                    <th class="mdl-data-table__cell--non-numeric">Edit</th>
+                    <th class="mdl-data-table__cell--non-numeric">Delete</th>
                 </tr>
             </thead>
             <tbody>
-            {% for topic in events %}
+            {% for event in events %}
                 <tr>
-                    <td class="mdl-data-table__cell--non-numeric"><a href="{{ url_for(".topic_edit", id=event.id) }}">{{ event.name }}</a></td>
-                    <td class="mdl-data-table__cell--non-numeric">{{ topic.mode }}</td>
+                    <td class="mdl-data-table__cell--non-numeric"><a href="{{ url_for(".event_show", id=event.id) }}">{{ event.name }}</a></td>
+                    <td class="mdl-data-table__cell--non-numeric">
+                        <a href="{{ url_for(".event_edit", id=event.id) }}">
+                            <i class="material-icons">edit</i>
+                        </a>
+                    </td>
+                    <td class="mdl-data-table__cell--non-numeric">
+                        <a href="{{ url_for(".event_delete", id=event.id) }}">
+                            <i class="material-icons">delete</i>
+                        </a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
         <div class="mdl-cell mdl-cell--3-col mdl-cell--3-col-tablet mdl-cell--2-col-phone">
-            <a class="mdl-button mdl-button--colored mdl-js-button" href="{{ url_for(".topic") }}">
-                All topics
+            <a class="mdl-button mdl-button--colored mdl-js-button" href="{{ url_for(".event") }}">
+                All events
             </a>
         </div>
     </div>

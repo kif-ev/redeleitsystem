@@ -15,8 +15,8 @@ admin = Blueprint("admin", __name__)
 @admin_permission.require()
 def index():
     users = User.query.limit(10).all()
-    topics = Topic.query.limit(10).all()
-    return render_layout("admin_index.html", users=users, topics=topics)
+    events = Event.query.limit(10).all()
+    return render_layout("admin_index.html", users=users, events=events)
 
 @admin.route("/user/")
 @login_required
@@ -74,6 +74,16 @@ def user_new():
 def event():
     events = Event.query.all()
     return render_layout("admin_event_index.html", events=events)
+        
+
+@admin.route("/even/show")
+@login_required
+@admin_permission.require()
+def event_show():
+    event_id = request.args.get("id", None)
+    if event_id is not None:
+        event = Event.query.filter_by(id=event_id).first()
+        return render_layout("admin_event_show.html", event=event)
 
 
 @admin.route("/event/new", methods=["GET", "POST"])
@@ -98,7 +108,7 @@ def event_new():
 def event_delete():
     event_id = request.args.get("id", None)
     if event_id is not None:
-        event  = Event.query.filter_by(id=event_id).first()
+        event = Event.query.filter_by(id=event_id).first()
         db.session.delete(event)
         db.session.commit()
         flash("Event deleted.", "alert-success")
@@ -111,9 +121,9 @@ def event_edit():
     event_id = request.args.get("id", None)
     if event_id is not None:
         event = db.session.query(Event).filter_by(id=event_id).first()
-        form = NewEventForm(obj=topic)
+        form = NewEventForm(obj=event)
         if form.validate_on_submit():
-            form.populate_obj(topic)
+            form.populate_obj(event)
             db.session.commit()
             return redirect(url_for(".index"))
         else:
@@ -135,6 +145,10 @@ def topic_new():
         db.session.add(topic)
         db.session.commit()
         return redirect(url_for(".topic"))
+    event_id = request.args.get("event_id", None)
+    if event_id is None:
+        return redirect(url_for(".index"))
+    form.event_id.data = event_id
     return render_layout("admin_topic_new.html", form=form)
 
 @admin.route("/topic/delete")

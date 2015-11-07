@@ -1,5 +1,5 @@
 {% extends "admin_index.html" %}
-{% block admin_title %}Event{% endblock %}
+{% block admin_title %}Event - {{ event.name }}{% endblock %}
 
 {% block content %}
     <div class="mdl-cell mdl-cell--3-col mdl-grid mdl-grid--no-spacing">
@@ -7,21 +7,22 @@
             <thead>
                 <tr>
                     <th class="mdl-data-table__cell--non-numeric">Name</th>
+                    <th class="mdl-data-table__cell--non-numeric">Mode</th>
                     <th class="mdl-data-table__cell--non-numeric">Edit</th>
                     <th class="mdl-data-table__cell--non-numeric">Delete</th>
                 </tr>
             </thead>
             <tbody>
-            {% for event in events %}
+            {% for topic in event.topics %}
                 <tr>
-                    <td class="mdl-data-table__cell--non-numeric"><a href="{{ url_for(".event_show", id=event.id) }}">{{ event.name }}</a></td>
+                    <td class="mdl-data-table__cell--non-numeric"><a href="{{ url_for(".topic_show", id=topic.id) }}">{{ topic.name }}</a></td>
                     <td class="mdl-data-table__cell--non-numeric">
-                        <a href="{{ url_for(".event_edit", id=event.id) }}">
+                        <a href="{{ url_for(".topic_edit", id=topic.id) }}">
                             <i class="material-icons">edit</i>
                         </a>
                     </td>
                     <td class="mdl-data-table__cell--non-numeric">
-                        <a href="{{ url_for('.event_delete', id=event.id) }}">
+                        <a href="{{ url_for('.topic_delete', id=topic.id) }}">
                             <i class="material-icons">delete</i>
                         </a>
                     </td>
@@ -31,7 +32,7 @@
         </table>
         <div class="rede-separator">
             <div class="mdl-cell mdl-cell--1-col">
-                <a class="mdl-button mdl-button--colored mdl-js-button mdl-button--fab mdl-js-ripple-effect" href="{{ url_for('.event_new') }}">
+                <a class="mdl-button mdl-button--colored mdl-js-button mdl-button--fab mdl-js-ripple-effect" href="{{ url_for('.topic_new', event_id=event.id) }}">
                     <i class="material-icons">add</i>
                 </a>
             </div>
