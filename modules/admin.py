@@ -3,7 +3,7 @@ from flask.ext.login import login_required
 from passlib.hash import pbkdf2_sha256
 
 from models.database import User, Topic, Event, Speaker, Statement
-from models.forms import AdminUserForm, NewUserForm, NewTopicForm, NewEventForm, AddStatementForm
+from models.forms import AdminUserForm, NewUserForm, NewTopicForm, NewEventForm, AddStatementForm, EditSpeakerForm
 
 from shared import db, admin_permission
 from utils import render_layout, speaker_by_name_or_number
@@ -206,24 +206,25 @@ def topic():
 @admin.route("/speaker/rename", methods=["GET", "POST"])
 @login_required
 @admin_permission.require()
-def rename():
+def speaker_edit():
     #speaker = Speaker.query.filter_by(number=number,event).first()
     #if speaker is not None:
-    
-    form = AddNameToSpeaker(obj=speaker)
-    speaker = Speaker.query.filter_by(number=form.number.data, event_id=form.event_id.data).first()      
+    #id=statement.speaker.identifier(), topic_id=topic.id)
+    speaker_id = request.args.get("id", None)
+    topic_id = request.args.get("topic_id", None)
+    speaker = Speaker.query.filter_by(id=speaker_id).first()
+    form = EditSpeakerForm(obj=speaker)
+    form.topic_id.data=topic_id
+        
     if speaker is not None:
         if form.validate_on_submit():
-            speaker.name = form.speaker_name.data
+            speaker.name = form.name.data
             db.session.commit()
             return redirect(url_for(".topic_show",id=form.topic_id.data))
+        else: 
+            return render_layout("admin_speaker_edit.html", form=form, speaker=speaker, topic_id=topic_id)
     else:
         return redirect(url_for(".index"))
-    
-        
-    
-        
-        
     
 
 

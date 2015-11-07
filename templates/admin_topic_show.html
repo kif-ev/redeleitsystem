@@ -11,6 +11,7 @@
                     <th class="mdl-data-table__cell--non-numeric">Topic</th>
                     <th class="mdl-data-table__cell--non-numeric">Count</th>
                     <th class="mdl-data-table__cell--non-numeric">Done</th>
+                    <th class="mdl-data-table__cell--non-numeric">Edit</th>
                     <th class="mdl-data-table__cell--non-numeric">Remove</th>
                 </tr>
             </thead>
@@ -25,6 +26,12 @@
                             <i class="material-icons">done</i>
                         </a>
                     </td>
+                    <td class="mdl-data-table__cell--non-numeric">
+                        <a href="{{ url_for(".speaker_edit", id=statement.speaker.id, topic_id=topic.id) }}">
+                            <i class="material-icons">edit</i>
+                        </a>
+                    </td>
+ 
                     <td class="mdl-data-table__cell--non-numeric">
                         <a href="{{ url_for('.statement_delete', id=statement.id, topic_id=topic.id) }}">
                             <i class="material-icons">cancel</i>

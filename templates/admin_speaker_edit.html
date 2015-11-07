@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+{% from "macros.html" import render_form %}
+{% block title %}Edit Speaker - Administration{% endblock %}
+
+{% block content %}
+        {{ render_form(form, action_url=url_for(".speaker_edit", id=speaker.id,topic_id=form.topic_id.data), action_text="Apply", title="Edit Speaker") }}
+{% endblock %}
