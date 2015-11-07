@@ -39,6 +39,12 @@ class Event(db.Model):
     __tablename__ = "events"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
+    
+    def __init__(self, name):
+        self.name = name
+    
+    def __repr__(self):
+        return "<Event(id={}, name={})>".format(self.id, self.name)
 
 class Topic(db.Model):
     __tablename__ = "topics"
@@ -49,15 +55,17 @@ class Topic(db.Model):
     event = relationship("Event", backref=backref("topics",order_by=id))
     
     
-    def __init__(self, name, mode):
+    def __init__(self, name, mode, event_id):
         self.name = name
         self.mode = mode
+        self.event_id = event_id
     
     def __repr__(self):
-        return "<Event(id={}, name='{}', mode='{}')>".format(
+        return "<Topic(id={}, name='{}', mode='{}', event_id={})>".format(
             self.id, 
             self.name, 
-            self.mode
+            self.mode,
+            self.event_id
         )
     
 
@@ -68,15 +76,15 @@ class Speaker(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"), nullable=False)
     event = relationship("Event", backref=backref("speakers",order_by=id))
     
-    def __init__(self, name, event):
+    def __init__(self, name, event_id):
         self.name = name
-        self.event = event
+        self.event_id = event_id
     
     def __repr__(self):
-        return "<Speaker(id={}, name='{}', event={})>".format(
+        return "<Speaker(id={}, name='{}', event_id={})>".format(
             self.id, 
             self.name,
-            self.event
+            self.event_id
         )
 
 
@@ -85,27 +93,26 @@ class Statement(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     speaker_id = db.Column(db.Integer, db.ForeignKey("speakers.id"), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"), nullable=False)
-    
-    speaker = relationship("Speaker", backref=backref("statements",order_by=id))
-    event = relationship("Event", backref=backref("statements",order_by=id))
-    
     insertion_time = db.Column(db.DateTime)
     executed = db.Column(db.Boolean)
     execution_time = db.Column(db.DateTime)
+
+    speaker = relationship("Speaker", backref=backref("statements",order_by=id))
+    event = relationship("Event", backref=backref("statements",order_by=id))
     
-    def __init__(self, speaker, event, insertion_time=None, executed=False, execution_time=None):
-        self.speaker = speaker
-        self.event = event
+    def __init__(self, speaker_id, event_id, insertion_time=None, executed=False, execution_time=None):
+        self.speaker_id = speaker_id
+        self.event_id = event_id
         self.insertion_time = insertion_time or datetime.now()
         self.executed = executed
         self.execution_time = execution_time or datetime.now()
     
     def __repr__(self):
-        return "<Statement(id={}, speaker={}, event={}, insertion_time={}, executed={}, execution_time={})>".format(
+        return "<Statement(id={}, speaker={}, event_id={}, topic_id={}, insertion_time={}, executed={}, execution_time={})>".format(
             self.id, 
             self.speaker,
-            #self.event,
-            self.topic,
+            self.event_id,
+            self.topic_id,
             self.insertion_time,
             self.executed,
             self.execution_time
