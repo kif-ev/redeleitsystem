@@ -203,6 +203,30 @@ def topic():
     return render_layout("admin_topic_index.html", topics=topics)
 
 
+@admin.route("/speaker/rename", methods=["GET", "POST"])
+@login_required
+@admin_permission.require()
+def rename():
+    #speaker = Speaker.query.filter_by(number=number,event).first()
+    #if speaker is not None:
+    
+    form = AddNameToSpeaker(obj=speaker)
+    speaker = Speaker.query.filter_by(number=form.number.data, event_id=form.event_id.data).first()      
+    if speaker is not None:
+        if form.validate_on_submit():
+            speaker.name = form.speaker_name.data
+            db.session.commit()
+            return redirect(url_for(".topic_show",id=form.topic_id.data))
+    else:
+        return redirect(url_for(".index"))
+    
+        
+    
+        
+        
+    
+
+
 @admin.route("/statement/")
 @login_required
 @admin_permission.require()
