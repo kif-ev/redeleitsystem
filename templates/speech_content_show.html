@@ -1,9 +1,9 @@
 {% from "macros.html" import render_form %}
-    {% for statements, event in meta %}
+    {% for statements, topic in meta %}
         <table class="mdl-data-table mdl-js-table mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
             <thead>
                 <tr>
-                    <th class="mdl-data-table__cell--non-numeric">Speaker for {{ event.name }}</th>
+                    <th class="mdl-data-table__cell--non-numeric">Speaker for {{ topic.name }}</th>
                 </tr>
             </thead>
             <tbody>

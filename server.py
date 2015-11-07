@@ -10,7 +10,7 @@ from passlib.hash import pbkdf2_sha256
 import config
 from shared import db, login_manager, render_layout
 from models.forms import LoginForm, NewUserForm
-from models.database import User, Statement, Speaker, Event
+from models.database import User, Statement, Speaker, Toic
 
 app = Flask(__name__)
 app.config.from_object(config)
@@ -38,24 +38,24 @@ def index():
         user = User(fullname, username, password, ["admin", "user"])
         db.session.add(user)
         db.session.commit()
-    events = Event.query.all()
+    topics = Topic.query.all()
     meta = []
-    for event in events:
-        ls = speech.query_statements(event.mode, event.id)
-        no_speaker = Speaker("No Speaker", event)
-        no_statement = Statement(no_speaker, event)
-        meta.append((ls[0] if len(ls) > 0 else (no_statement, no_speaker, ()), event))
+    for topic in topics:
+        ls = speech.query_statements(topic.mode, topic.id)
+        no_speaker = Speaker("No Speaker", topic)
+        no_statement = Statement(no_speaker, topic)
+        meta.append((ls[0] if len(ls) > 0 else (no_statement, no_speaker, ()), topic))
     return render_layout("index.html", meta=meta)
 
 @app.route("/update")
 def update():
-    events = Event.query.all()
+    topics = Topic.query.all()
     meta = []
-    for event in events:
-        ls = speech.query_statements(event.mode, event.id)
-        no_speaker = Speaker("No Speaker", event)
-        no_statement = Statement(no_speaker, event)
-        meta.append((ls[0] if len(ls) > 0 else (no_statement, no_speaker, ()), event))
+    for topic in topics:
+        ls = speech.query_statements(topic.mode, topic.id)
+        no_speaker = Speaker("No Speaker", topic)
+        no_statement = Statement(no_speaker, topic)
+        meta.append((ls[0] if len(ls) > 0 else (no_statement, no_speaker, ()), topic))
     return render_layout("content_index.html", meta=meta)
 
 @app.route("/update.js")

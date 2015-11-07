@@ -2,8 +2,8 @@ from flask import Blueprint, redirect, url_for, request, flash, abort, send_file
 from flask.ext.login import login_required
 from passlib.hash import pbkdf2_sha256
 
-from models.database import User, Event
-from models.forms import AdminUserForm, NewUserForm, NewEventForm
+from models.database import User, Topic
+from models.forms import AdminUserForm, NewUserForm, NewTopicForm
 
 from shared import db, admin_permission, render_layout
 
@@ -15,8 +15,8 @@ admin = Blueprint("admin", __name__)
 @admin_permission.require()
 def index():
     users = User.query.limit(10).all()
-    events = Event.query.limit(10).all()
-    return render_layout("admin_index.html", users=users, events=events)
+    topics = Topic.query.limit(10).all()
+    return render_layout("admin_index.html", users=users, topics=topics)
 
 @admin.route("/user/")
 @login_required
@@ -69,53 +69,53 @@ def user_new():
     return render_layout("admin_user_new.html", form=form)
 
 
-@admin.route("/event/new", methods=["GET", "POST"])
+@admin.route("/topic/new", methods=["GET", "POST"])
 @login_required
 @admin_permission.require()
-def event_new():
-    form = NewEventForm()
+def topic_new():
+    form = NewTopicForm()
     if form.validate_on_submit():
-        if Event.query.filter_by(name=form.name.data).count() > 0:
-            flash("There already is an event with that name.", "alert-error")
-            return render_layout("admin_event_new.html", form=form)
-        event = Event(form.name.data, form.mode.data)
-        db.session.add(event)
+        if Topic.query.filter_by(name=form.name.data).count() > 0:
+            flash("There already is an topic with that name.", "alert-error")
+            return render_layout("admin_topic_new.html", form=form)
+        topic = Topic(form.name.data, form.mode.data)
+        db.session.add(topic)
         db.session.commit()
-        return redirect(url_for(".event"))
-    return render_layout("admin_event_new.html", form=form)
+        return redirect(url_for(".topic"))
+    return render_layout("admin_topic_new.html", form=form)
 
-@admin.route("/event/delete")
+@admin.route("/topic/delete")
 @login_required
 @admin_permission.require()
-def event_delete():
-    event_id = request.args.get("id", None)
-    if event_id is not None:
-        event  = Event.query.filter_by(id=event_id).first()
-        db.session.delete(event)
+def topc_delete():
+    topic_id = request.args.get("id", None)
+    if topic_id is not None:
+        topic  = Topic.query.filter_by(id=topic_id).first()
+        db.session.delete(topic)
         db.session.commit()
-        flash("Event deleted.", "alert-success")
-    return redirect(url_for(".event"))
+        flash("Topic deleted.", "alert-success")
+    return redirect(url_for(".topic"))
 
-@admin.route("/event/edit", methods=["GET", "POST"])
+@admin.route("/topic/edit", methods=["GET", "POST"])
 @login_required
 @admin_permission.require()
-def event_edit():
-    event_id = request.args.get("id", None)
-    if event_id is not None:
-        event = db.session.query(Event).filter_by(id=event_id).first()
-        form = NewEventForm(obj=event)
+def topic_edit():
+    topic_id = request.args.get("id", None)
+    if topic_id is not None:
+        topic = db.session.query(Topic).filter_by(id=topic_id).first()
+        form = NewTopicForm(obj=topic)
         if form.validate_on_submit():
-            form.populate_obj(event)
+            form.populate_obj(topic)
             db.session.commit()
             return redirect(url_for(".index"))
         else:
-            return render_layout("admin_event_edit.html", form=form, id=event_id)
+            return render_layout("admin_topic_edit.html", form=form, id=topic_id)
     else:
         return redirect(url_for(".index"))
 
-@admin.route("/event/")
+@admin.route("/topic/")
 @login_required
 @admin_permission.require()
-def event():
-    events = Event.query.all()
-    return render_layout("admin_event_index.html", events=events)
+def topic():
+    topics = Topic.query.all()
+    return render_layout("admin_topic_index.html", topics=topics)

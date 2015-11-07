@@ -36,17 +36,17 @@
                 </tr>
             </thead>
             <tbody>
-            {% for event in events %}
+            {% for topic in events %}
                 <tr>
-                    <td class="mdl-data-table__cell--non-numeric"><a href="{{ url_for(".event_edit", id=event.id) }}">{{ event.name }}</a></td>
-                    <td class="mdl-data-table__cell--non-numeric">{{ event.mode }}</td>
+                    <td class="mdl-data-table__cell--non-numeric"><a href="{{ url_for(".topic_edit", id=event.id) }}">{{ event.name }}</a></td>
+                    <td class="mdl-data-table__cell--non-numeric">{{ topic.mode }}</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
         <div class="mdl-cell mdl-cell--3-col mdl-cell--3-col-tablet mdl-cell--2-col-phone">
-            <a class="mdl-button mdl-button--colored mdl-js-button" href="{{ url_for(".event") }}">
-                All events
+            <a class="mdl-button mdl-button--colored mdl-js-button" href="{{ url_for(".topic") }}">
+                All topics
             </a>
         </div>
     </div>

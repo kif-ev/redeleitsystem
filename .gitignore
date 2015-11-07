@@ -4,3 +4,4 @@ test.db
 *.swp
 config.py
 venv/
+.spyderproject

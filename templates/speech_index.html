@@ -11,12 +11,12 @@
 {% endblock %}
 
 {% block content %}
-    {% for statements, add_form, event in meta %}
+    {% for statements, add_form, topic in meta %}
         <table id="next-speaker-table" class="mdl-data-table mdl-js-table mdl-shadow--2dp mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone sortable">
             <thead>
                 <tr>
                     <th class="mdl-data-table__cell--non-numeric">Speaker</th>
-                    {% if (mode is not none and mode == "balanced") or (mode is none and event.mode == "balanced") %}
+                    {% if (mode is not none and mode == "balanced") or (mode is none and topic.mode == "balanced") %}
                     <th>Count</th>
                     {% endif %}
                     {% if "user" in current_user.roles %}
@@ -31,21 +31,21 @@
                     <td class="mdl-data-table__cell--non-numeric">
                         <h5>{{ speaker.name }}</h5>
                     </td>
-                    {% if (mode is not none and mode == "balanced") or (mode is none and event.mode == "balanced") %}
+                    {% if (mode is not none and mode == "balanced") or (mode is none and topic.mode == "balanced") %}
                     <td>
                         <h5>{{ count }}</h5>
                     </td>
                     {% endif %}
                     {% if "user" in current_user.roles %}
                     <td class="mdl-data-table__cell--non-numeric">
-                        <a href="{{ url_for(".done", statement=statement.id, next=".index", event=event_id) }}">
+                        <a href="{{ url_for(".done", statement=statement.id, next=".index", topic=event_id) }}">
                             <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
                                 <i class="material-icons">done</i>
                             </button>
                         </a>
                     </td>
                     <td class="mdl-data-table__cell--non-numeric">
-                        <a href="{{ url_for(".cancel", statement=statement.id, next=".index", event=event_id) }}">
+                        <a href="{{ url_for(".cancel", statement=statement.id, next=".index", topic=event_id) }}">
                             <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
                                 <i class="material-icons">delete</i>
                             </button>
@@ -57,7 +57,7 @@
             </tbody>
         </table>
         {% if current_user.is_authenticated() and "user" in current_user.roles %}
-            {{ render_form(add_form, action_url=url_for('.add', next=".index", event=event_id), action_text="Add", title="Add Speaker to {}".format(event.name)) }}
+            {{ render_form(add_form, action_url=url_for('.add', next=".index", topic=event_id), action_text="Add", title="Add Speaker to {}".format(event.name)) }}
         {% endif %}
     {% endfor %}
 {% endblock %}

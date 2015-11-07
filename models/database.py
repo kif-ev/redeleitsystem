@@ -34,8 +34,8 @@ class User(db.Model, UserMixin):
         )
 
 
-class Event(db.Model):
-    __tablename__ = "events"
+class Topics(db.Model):
+    __tablename__ = "topics"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
     mode = db.Column(db.String)
@@ -90,7 +90,8 @@ class Statement(db.Model):
         return "<Statement(id={}, speaker={}, event={}, insertion_time={}, executed={}, execution_time={})>".format(
             self.id, 
             self.speaker,
-            self.event,
+            #self.event,
+            self.topic,
             self.insertion_time,
             self.executed,
             self.execution_time
