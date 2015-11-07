@@ -56,7 +56,32 @@
                 </li>
                 {% endif %}
                 <li><a href="{{ url_for(".statement_undo") }}" class="rede-href"><i class="material-icons" role="presentation">undo</i> Previous</a></li>
+                <li><a href="{{ url_for(".topic_show", id=topic.get_next_index()) }}"><i class="material-icons">arrow_forward</i> Next Topic</a></li>
             </ul>
         </div>
+    </div>
+    <div class="mdl-cell mdl-cell--3-col mdl-cell--3-col-tablet mdl-cell--4-col-phone mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h4 class="mdl-card__title-text">Topics</h4>
+        </div>
+        <table>
+        {% for t in topics %}
+            <tr class="{% if t == topic %}rede-list-point-big{% else %}rede-list-point-normal{% endif %}">
+                <td>
+                    {% if t != topics[0] %}
+                    <a href="{{ url_for(".topic_swap_up", id=t.id, original=topic.id) }}"><i class="material-icons">keyboard_arrow_up</i></a>
+                    {% endif %}
+                </td>
+                <td>
+                    {{ t.name }}
+                </td>
+                <td>
+                    {% if t != topics[-1] %}
+                    <a href="{{ url_for(".topic_swap_down", id=t.id, original=topic.id) }}"><i class="material-icons">keyboard_arrow_down</i></a>
+                    {% endif %}
+                </td>
+            <tr>
+        {% endfor %}
+        </table>
     </div>
 {% endblock %}

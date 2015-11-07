@@ -123,3 +123,11 @@ th.rede-medium-text {
     list-style-type: none;
     padding-left: 1pc;
 }
+
+.rede-list-point-big {
+    font-weight: bold;
+}
+
+.rede-list-point-normal {
+    font-weight: normal;
+}
