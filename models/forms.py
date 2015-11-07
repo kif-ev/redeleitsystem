@@ -28,8 +28,9 @@ class AddStatementForm(Form):
     
 class AddNameToSpeaker(Form):
     speaker_name = StringField("Speaker", validators=[InputRequired("Entering the speaker is required.")])
-    speaker_id = HiddenField("Speaker_Id", validators=[NumberRange(min=0, message=None),InputRequired("ID must be a positve Integer.")])
-    event = HiddenField("Event")
+    number = HiddenField("Speaker_id", validators=[NumberRange(min=0, message=None),InputRequired("ID must be a positve Integer.")])
+    topic_id = HiddenField("Topic_id")
+    event_id = HiddenField("Event_id")
 
 class NewEventForm(Form):
     name = StringField("Name", validators=[InputRequired("Entering the name is required.")])

@@ -12,7 +12,7 @@ def render_layout(template, **kwargs):
 def speaker_by_name_or_number(name_or_number, event_id):
     if name_or_number.isnumeric():
         number = int(name_or_number)
-        speaker = Speaker.query.filter_by(number=number).first()
+        speaker = Speaker.query.filter_by(number=number, event_id=event_id).first()
         if speaker is not None:
             return speaker
         else:
@@ -22,7 +22,7 @@ def speaker_by_name_or_number(name_or_number, event_id):
             return speaker
     else:
         name = name_or_number
-        speaker = Speaker.query.filter_by(name=name).first()
+        speaker = Speaker.query.filter_by(name=name, event_id=event_id).first()
         if speaker is not None:
             return speaker
         else:
