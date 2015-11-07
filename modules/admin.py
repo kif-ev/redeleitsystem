@@ -2,10 +2,11 @@ from flask import Blueprint, redirect, url_for, request, flash, abort, send_file
 from flask.ext.login import login_required
 from passlib.hash import pbkdf2_sha256
 
-from models.database import User, Topic, Event
-from models.forms import AdminUserForm, NewUserForm, NewTopicForm, NewEventForm
+from models.database import User, Topic, Event, Speaker, Statement
+from models.forms import AdminUserForm, NewUserForm, NewTopicForm, NewEventForm, AddStatementForm
 
-from shared import db, admin_permission, render_layout
+from shared import db, admin_permission
+from utils import render_layout, speaker_by_name_or_number
 
 admin = Blueprint("admin", __name__)
 
@@ -84,6 +85,7 @@ def event_show():
     if event_id is not None:
         event = Event.query.filter_by(id=event_id).first()
         return render_layout("admin_event_show.html", event=event)
+    return redirect(url_for(".index"))
 
 
 @admin.route("/event/new", methods=["GET", "POST"])
@@ -131,6 +133,19 @@ def event_edit():
     else:
         return redirect(url_for(".index"))
 
+
+@admin.route("/topic/show")
+@login_required
+@admin_permission.require()
+def topic_show():
+    topic_id = request.args.get("id", None)
+    if topic_id is not None:
+        topic = Topic.query.filter_by(id=topic_id).first()
+        form = AddStatementForm()
+        form.topic.data = topic.id
+        return render_layout("admin_topic_show.html", topic=topic, form=form)
+    return redirect(url_for(".index"))
+        
 
 @admin.route("/topic/new", methods=["GET", "POST"])
 @login_required
@@ -186,3 +201,58 @@ def topic_edit():
 def topic():
     topics = Topic.query.all()
     return render_layout("admin_topic_index.html", topics=topics)
+
+
+@admin.route("/statement/")
+@login_required
+@admin_permission.require()
+def statement():
+    statements = Statement.query.all()
+    return render_layout("admin_statement_index.html", statement=statement)
+
+@admin.route("/statement/new", methods=["GET", "POST"])
+@login_required
+@admin_permission.require()
+def statement_new():
+    form = AddStatementForm()
+    if form.validate_on_submit():
+        topic = Topic.query.filter_by(id=form.topic.data).first()
+        speaker = speaker_by_name_or_number(form.speaker_name.data, topic.event.id)
+        if topic is not None and speaker is not None:
+            if speaker.count_active(topic) == 0:
+                statement = Statement(speaker.id, topic.id)
+                db.session.add(statement)
+                db.session.commit()
+            return redirect(url_for(".topic_show", id=topic.id))
+    return render_layout("admin_statement_new.html", form=form)
+
+@admin.route("/statement/done")
+@login_required
+@admin_permission.require()
+def statement_done():
+    statement_id = request.args.get("id", None)
+    if statement_id is not None:
+        statement = Statement.query.filter_by(id=statement_id).first()
+        if statement is not None:
+            statement.done()
+            db.session.commit()
+    topic_id = request.args.get("topic_id", None)
+    if topic_id is not None:
+        return redirect(url_for(".topic_show", id=topic_id))
+    return redirect(url_for(".index"))
+
+@admin.route("/statement/delete")
+@login_required
+@admin_permission.require()
+def statement_delete():
+    statement_id = request.args.get("id", None)
+    if statement_id is not None:
+        statement = Statement.query.filter_by(id=statement_id).first()
+        if statement is not None:
+            db.session.delete(statement)
+            db.session.commit()
+    topic_id = request.args.get("topic_id", None)
+    if topic_id is not None:
+        return redirect(url_for(".topic_show", id=topic_id))
+    return redirect(url_for(".index"))
+

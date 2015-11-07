@@ -8,7 +8,8 @@ from flask.ext.migrate import Migrate, MigrateCommand
 from passlib.hash import pbkdf2_sha256
 
 import config
-from shared import db, login_manager, render_layout
+from shared import db, login_manager
+from utils import render_layout
 from models.forms import LoginForm, NewUserForm
 from models.database import User, Statement, Speaker, Topic
 
@@ -61,13 +62,7 @@ def adduser():
 
 @app.route("/")
 def index():
-    topics = Topic.query.all()
     meta = []
-    for topic in topics:
-        ls = speech.query_statements(topic.mode, topic.id)
-        no_speaker = Speaker("No Speaker", topic)
-        no_statement = Statement(no_speaker, topic)
-        meta.append((ls[0] if len(ls) > 0 else (no_statement, no_speaker, ()), topic))
     return render_layout("index.html", meta=meta)
 
 @app.route("/update")

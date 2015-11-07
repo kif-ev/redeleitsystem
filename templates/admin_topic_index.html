@@ -8,6 +8,8 @@
                 <tr>
                     <th class="mdl-data-table__cell--non-numeric">Name</th>
                     <th class="mdl-data-table__cell--non-numeric">Mode</th>
+                    <th class="mdl-data-table__cell--non-numeric">Event</th>
+                    <th class="mdl-data-table__cell--non-numeric">Edit</th>
                     <th class="mdl-data-table__cell--non-numeric">Delete</th>
                 </tr>
             </thead>
@@ -16,6 +18,12 @@
                 <tr>
                     <td class="mdl-data-table__cell--non-numeric"><a href="{{ url_for(".topic_edit", id=topic.id) }}">{{ topic.name }}</a></td>
                     <td class="mdl-data-table__cell--non-numeric">{{ topic.mode }}</td>
+                    <td class="mdl-data-table__cell--non-numeric">{{ topic.event.name }}</td>
+                    <td class="mdl-data-table__cell--non-numeric">
+                        <a href="{{ url_for('.topic_edit', id=topic.id) }}">
+                            <i class="material-icons">edit</i>
+                        </a>
+                    </td>
                     <td class="mdl-data-table__cell--non-numeric">
                         <a href="{{ url_for('.topic_delete', id=topic.id) }}">
                             <i class="material-icons">delete</i>

@@ -1,0 +1,39 @@
+{% extends "admin_index.html" %}
+{% from "macros.html" import render_form %}
+{% block admin_title %}Topic - {{ topic.name }}{% endblock %}
+
+{% block content %}
+    <div class="mdl-cell mdl-cell--6-col mdl-cell--5-col-tablet mdl-cell--4-col-phone mdl-grid mdl-grid--no-spacing">
+        <table class="mdl-data-table mdl-js-table mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+            <thead>
+                <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Speaker</th>
+                    <th class="mdl-data-table__cell--non-numeric">Topic</th>
+                    <th class="mdl-data-table__cell--non-numeric">Count</th>
+                    <th class="mdl-data-table__cell--non-numeric">Done</th>
+                    <th class="mdl-data-table__cell--non-numeric">Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for statement in topic.sorted_statements() %}
+                <tr>
+                    <td class="mdl-data-table__cell--non-numeric">{{ statement.speaker.identifier() }}</td>
+                    <td class="mdl-data-table__cell--non-numeric">{{ statement.topic.name }}</td>
+                    <td class="mdl-data-table__cell--non-numeric">{{ statement.speaker.count(statement.topic) }}</td>
+                    <td class="mdl-data-table__cell--non-numeric">
+                        <a href="{{ url_for(".statement_done", id=statement.id, topic_id=topic.id) }}">
+                            <i class="material-icons">done</i>
+                        </a>
+                    </td>
+                    <td class="mdl-data-table__cell--non-numeric">
+                        <a href="{{ url_for('.statement_delete', id=statement.id, topic_id=topic.id) }}">
+                            <i class="material-icons">cancel</i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {{ render_form(form, action_url=url_for(".statement_new"), action_text="Add", title="Add Statement", class_="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--3-col mdl-cell-3-col-tablet mdl-cell--4-col-phone") }}
+{% endblock %}

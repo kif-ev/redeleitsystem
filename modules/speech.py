@@ -4,7 +4,8 @@ from flask.ext.login import login_required
 from models.database import User, Statement, Speaker, Topic
 from models.forms import AddStatementForm
 
-from shared import db, admin_permission, user_permission, render_layout
+from shared import db, admin_permission, user_permission
+from utils import render_layout
 
 from datetime import datetime
 import json
@@ -13,9 +14,10 @@ import config
 
 speech = Blueprint("speech", __name__)
 
+"""
 def query_statements(mode, topic_id):
-    statements = db.session.query(Statement).filter_by(topic=topic_id).all()
-    speakers = db.session.query(Speaker).filter_by(topic=topic_id).all()
+    statements = db.session.query(Statement).filter_by(topic_id=topic_id).all()
+    speakers = db.session.query(Speaker).filter_by(topic_id=topic_id).all()
     if mode == "balanced" or mode == "pending":
         count = { speaker.id: 0 for speaker in speakers }
         for statement in statements:
@@ -37,6 +39,7 @@ def query_statements(mode, topic_id):
         return result
     
     print("unknown querying mode {}".format(mode))
+"""
 
 @speech.route("/index")
 def index():
