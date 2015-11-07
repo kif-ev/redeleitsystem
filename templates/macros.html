@@ -135,10 +135,10 @@
             <div class="{{ action_class }}">
                 {% if btn_list != none %}
                     {%for this_btn_class, action_text, btn_value in btn_list %}
-	                <button type="submit" class="{{ btn_class }} {{ this_btn_class }}", value="{{ btn_value }}">{{ action_text }}</button>
+	                <button type="submit" class="{{ btn_class }} {{ this_btn_class }}" name="submit" value="{{ btn_value }}">{{ action_text }}</button>
                     {% endfor %}
 		{% else %}
-                <button type="submit" class="{{ btn_class }}", value="{{ btn_value }}">{{ action_text }}</button>
+                <button type="submit" class="{{ btn_class }}" value="{{ btn_value }}">{{ action_text }}</button>
                 {% endif %}
                 
             </div>

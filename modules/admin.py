@@ -274,14 +274,20 @@ def statement():
 def statement_new():
     form = AddStatementForm()
     if form.validate_on_submit():
-        topic = Topic.query.filter_by(id=form.topic.data).first()
-        speaker = speaker_by_name_or_number(form.speaker_name.data, topic.event.id)
-        if topic is not None and speaker is not None:
-            if speaker.count_active(topic) == 0:
-                statement = Statement(speaker.id, topic.id)
-                db.session.add(statement)
-                db.session.commit()
+        statement = request.form.get("submit","add_statement")
+        if statement == "add_meta_statement":
+            topic = Topic.query.filter_by(id=form.topic.data).first()
+            
             return redirect(url_for(".topic_show", id=topic.id))
+        else:
+            topic = Topic.query.filter_by(id=form.topic.data).first()
+            speaker = speaker_by_name_or_number(form.speaker_name.data, topic.event.id)
+            if topic is not None and speaker is not None:
+                if speaker.count_active(topic) == 0:
+                    statement = Statement(speaker.id, topic.id)
+                    db.session.add(statement)
+                    db.session.commit()
+                return redirect(url_for(".topic_show", id=topic.id))
     return render_layout("admin_statement_new.html", form=form)
 
 @admin.route("/statement/done")
