@@ -10,7 +10,7 @@ from passlib.hash import pbkdf2_sha256
 import config
 from shared import db, login_manager, render_layout
 from models.forms import LoginForm, NewUserForm
-from models.database import User, Statement, Speaker, Toic
+from models.database import User, Statement, Speaker, Topic
 
 app = Flask(__name__)
 app.config.from_object(config)

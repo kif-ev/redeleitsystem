@@ -34,7 +34,7 @@ class User(db.Model, UserMixin):
         )
 
 
-class Topics(db.Model):
+class Topic(db.Model):
     __tablename__ = "topics"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
