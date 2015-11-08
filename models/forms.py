@@ -23,11 +23,12 @@ class AdminUserForm(Form):
     roles = SelectMultipleField("User roles", choices=[(x.lower().strip(), x) for x in shared.roles])
 
 class AddStatementForm(Form):
-    speaker_name = StringField("Speaker", validators=[InputRequired("Entering the speaker is required.")])
+    speaker_name = StringField("Speaker", validators=[InputRequired("Entering the speaker name or number is required.")])
     topic = HiddenField("Topic")
     
 class EditSpeakerForm(Form):
     name = StringField("Speaker", validators=[InputRequired("Entering the speaker is required.")])
+    number = IntegerField("Number", validators=[Optional(), NumberRange(min=0)])
     topic_id = HiddenField("Topic_id")
     id = HiddenField("Speaker_id")
 

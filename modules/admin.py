@@ -252,10 +252,11 @@ def speaker_edit():
     speaker = Speaker.query.filter_by(id=speaker_id).first()
     form = EditSpeakerForm(obj=speaker)
     form.topic_id.data=topic_id
-        
+    
     if speaker is not None:
         if form.validate_on_submit():
             speaker.name = form.name.data
+            speaker.number = form.number.data
             db.session.commit()
             return redirect(url_for(".topic_show",id=form.topic_id.data))
         else: 
