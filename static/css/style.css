@@ -137,6 +137,16 @@ th.rede-medium-text {
     background-color: #F44335;
 }
 
+.rede-table-bg-blue {
+    color: white;
+    background-color: #448AFF;
+    font-weight: bold;
+}
+
+.rede-table-centered > td {
+    text-align: center;
+}
+
 .rede-paused-title {
     margin: 0 auto;
 }
