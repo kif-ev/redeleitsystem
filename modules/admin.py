@@ -282,8 +282,11 @@ def statement_new():
         topic = Topic.query.filter_by(id=form.topic.data).first()
         speaker = speaker_by_name_or_number(form.speaker_name.data, topic.event.id)
         if topic is not None and speaker is not None:
-            if speaker.count_active(topic) == 0 or (statement == "add_meta_statement" and speaker.count_active_meta(topic) == 0) :
-                statement = Statement(speaker.id, topic.id, is_meta=(statement == "add_meta_statement"))
+            if speaker.count_active(topic) == 0 or (statement == "add_meta_statement" 
+                and speaker.count_active_meta(topic) == 0) :
+                statement = Statement(speaker.id, topic.id,
+                                      is_meta=(statement == "add_meta_statement"),
+                                      is_current=(not topic.sorted_statements()))
                 db.session.add(statement)
                 db.session.commit()
             return redirect(url_for(".topic_show", id=topic.id))
@@ -309,12 +312,15 @@ def statement_done():
 @admin_permission.require()
 def statement_delete():
     statement_id = request.args.get("id", None)
+    topic_id = request.args.get("topic_id", None)
     if statement_id is not None:
         statement = Statement.query.filter_by(id=statement_id).first()
         if statement is not None:
+            topic = Topic.query.filter_by(id=topic_id).first()
+            if len(topic.sorted_statements()) > 1: 
+                topic.sorted_statements()[1].is_current = True
             db.session.delete(statement)
             db.session.commit()
-    topic_id = request.args.get("topic_id", None)
     if topic_id is not None:
         return redirect(url_for(".topic_show", id=topic_id))
     return redirect(url_for(".index"))

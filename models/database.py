@@ -94,9 +94,9 @@ class Topic(db.Model):
     def sorted_statements(self):
         statements = [statement for statement in self.statements if not statement.executed]
         if self.mode == "fifo":
-            return sorted(statements, key=lambda st: -1 if st.is_meta else st.id)
+            return sorted(statements, key=lambda st:-2 if st.is_current else -1 if st.is_meta else st.id)
         elif self.mode == "balanced":
-            return sorted(statements, key=lambda st: -1 if st.is_meta else st.speaker.count(self))
+            return sorted(statements, key=lambda st:-2 if st.is_current else -1 if st.is_meta else st.speaker.count(self))
         else:
             return statements
     
@@ -169,34 +169,40 @@ class Statement(db.Model):
     executed = db.Column(db.Boolean)
     execution_time = db.Column(db.DateTime)
     is_meta = db.Column(db.Boolean, default=False)
+    is_current = db.Column(db.Boolean, default=False)
 
     speaker = relationship("Speaker", backref=backref("statements",order_by=id))
     topic = relationship("Topic", backref=backref("statements",order_by=id))
     
-    def __init__(self, speaker_id, topic_id, insertion_time=None, executed=False, execution_time=None, is_meta=False):
+    def __init__(self, speaker_id, topic_id, insertion_time=None, executed=False, execution_time=None, is_meta=False, is_current=False):
         self.speaker_id = speaker_id
         self.topic_id = topic_id
         self.insertion_time = insertion_time or datetime.now()
         self.executed = executed
         self.execution_time = execution_time or datetime.now()
         self.is_meta = is_meta
+        self.is_current = is_current
     
     def __repr__(self):
-        return "<Statement(id={}, speaker={}, topic_id={}, insertion_time={}, executed={}, execution_time={}, is_meta={})>".format(
+        return "<Statement(id={}, speaker={}, topic_id={}, insertion_time={}, executed={}, execution_time={}, is_meta={}, is_current={})>".format(
             self.id, 
             self.speaker,
             self.topic_id,
             self.insertion_time,
             self.executed,
             self.execution_time,
-            self.is_meta
+            self.is_meta,
+            self.is_current
         )
     
     def done(self):
         if self.executed:
             return False
         self.executed = True
+        self.is_current = False
         self.execution_time = datetime.now()
+        if self.topic.sorted_statements() is not None and self.topic.sorted_statements():
+            self.topic.sorted_statements()[0].is_current = True
         return True
     
     def undo(self):
