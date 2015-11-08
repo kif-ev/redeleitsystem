@@ -166,7 +166,7 @@ def topic_new():
         topic = Topic(form.name.data, form.mode.data, form.event_id.data)
         db.session.add(topic)
         db.session.commit()
-        return redirect(url_for(".event", id=topic.event.id))
+        return redirect(url_for(".event_show", id=topic.event.id))
     event_id = request.args.get("event_id", None)
     if event_id is None:
         return redirect(url_for(".index"))
