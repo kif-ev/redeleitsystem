@@ -66,12 +66,22 @@
         {{ render_form(form, action_url=url_for(".statement_new"), action_text="Add", title="Add Statement", class_="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone", btn_list=[("","Add Statement","add_statement"),  ("mdl-button--colored","Add Meta","add_meta_statement")] ) }}
         <div class="mdl-cell mdl-card mdl-shadow--2dp mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
             <ul class="rede-list-no-bullet">
-                {% if topic.sorted_statements()|length() > 0 %}
                 <li>
-                    <a id="next-statement-button" href="{{ url_for(".statement_done", id=topic.sorted_statements()[0].id, topic_id=topic.id) }}" class="rede-href"><i class="material-icons" role="presentation">redo</i> Next</a>
+                    <table style="width: 100%">
+                    <tr>
+                    <td>
+                    {% if can_undo_statement %}
+                        <a href="{{ url_for(".statement_undo", topic_id=topic.id) }}" class="rede-href"><i class="material-icons" role="presentation">undo</i> Previous</a>
+                    {% endif %}
+                    </td>
+                    <td>
+                    {% if topic.sorted_statements()|length() > 0 %}
+                        <a id="next-statement-button" href="{{ url_for(".statement_done", id=topic.sorted_statements()[0].id, topic_id=topic.id) }}" class="rede-href">Next <i class="material-icons" role="presentation">redo</i></a>
+                    {% endif %}
+                    </td>
+                    <tr>
+                    </table>
                 </li>
-                {% endif %}
-                <li><a href="{{ url_for(".statement_undo", topic_id=topic.id) }}" class="rede-href"><i class="material-icons" role="presentation">undo</i> Previous</a></li>
                 <li>
                     <form action="{{ url_for(".pause", id=topic.event.id, original=topic.id) }}" method="POST">
                         <button class="mdl-button">
@@ -133,16 +143,16 @@
         {% endfor %}
         </table>
         <table style="width:100%" >
-                <tr>
-                        <td>
-                                <a href="{{ url_for(".topic_show", id=topic.get_previous_index()) }}"><i class="material-icons" style="heigth: 16pt; width:16pt;">arrow_backward</i>Previous</a>
-                        </td>
-                        <td>
-                                <a href="{{ url_for(".topic_show", id=topic.get_next_index()) }}"> Next <i class="material-icons" style="height:16pt; width:16pt;">arrow_forward</i></a>   
-                        </td>
-                </tr>
+            <tr>
+                <td>
+                    <a href="{{ url_for(".topic_show", id=topic.get_previous_index()) }}"><i class="material-icons" style="heigth: 16pt; width:16pt;">arrow_backward</i>Previous</a>
+                </td>
+                <td>
+                    <a href="{{ url_for(".topic_show", id=topic.get_next_index()) }}"> Next <i class="material-icons" style="height:16pt; width:16pt;">arrow_forward</i></a>   
+                </td>
+            </tr>
         </table>
-</div>
+    </div>
     </div>
     {% if topic.event.paused %}
     <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-card mdl-shadow--2dp">

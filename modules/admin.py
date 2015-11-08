@@ -149,7 +149,8 @@ def topic_show():
         form.topic.data = topic.id
         statements = topic.sorted_statements()
         topics = topic.event.sorted_topics()
-        return render_layout("admin_topic_show.html", topic=topic, form=form, statements=statements, topics=topics)
+        can_undo = len(Statement.query.filter_by(executed=True, topic_id=topic_id).order_by(db.desc(Statement.execution_time)).all()) > 0
+        return render_layout("admin_topic_show.html", topic=topic, form=form, statements=statements, topics=topics, can_undo_statement=can_undo)
     return redirect(url_for(".index"))
         
 
