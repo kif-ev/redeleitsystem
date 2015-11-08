@@ -157,6 +157,7 @@ class Statement(db.Model):
     insertion_time = db.Column(db.DateTime)
     executed = db.Column(db.Boolean)
     execution_time = db.Column(db.DateTime)
+    is_meta = db.Column(db.Boolean, default=False)
 
     speaker = relationship("Speaker", backref=backref("statements",order_by=id))
     topic = relationship("Topic", backref=backref("statements",order_by=id))
