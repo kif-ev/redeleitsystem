@@ -22,6 +22,22 @@
     </div>
 {%- endmacro %}
 
+{% macro render_integerfield(field) -%}
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input id="{{ field.id }}" name="{{ field.id }}" class="mdl-textfield__input" type="text" {% if field.data is not none %}value="{{ field.data }}"{% endif %} />
+        <label class="mdl-textfield__label" for="{{ field.id }}">{{ field.label.text }}</label>
+        {% if field.errors %}
+            {% for e in field.errors %}
+                <div class="mdl-card__supporting-text">
+                    {{ e }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{%- endmacro %}
+
+
+
 {% macro render_passwordfield(field) -%}
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
         <input id="{{ field.id }}" name="{{ field.id }}" class="mdl-textfield__input" type="password" />
@@ -116,6 +132,8 @@
                         {{ render_stringfield(f) }}
                     {% elif f.type == "PasswordField" %}
                         {{ render_passwordfield(f) }}
+                    {% elif f.type == "IntegerField" %}
+                        {{ render_integerfield(f) }}
                     {% elif f.type == "BooleanField" %}
                         {{ render_booleanfield(f) }}
                     {% elif f.type == "CSRFTokenField" %}

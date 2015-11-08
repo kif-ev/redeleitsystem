@@ -2,5 +2,4 @@ SQLALCHEMY_DATABASE_URI = "sqlite:///example.db" # SQLAlchemy connection data
 SECRET_KEY = "abcdef"                            # 
 DEBUG = False                                    # Debug Mode
 UPDATE_INDEX_INTERVAL = 1                        # Time in seconds between requests
-UPDATE_SHOW_INTERVAL = 1                         # 
 UPDATE_TIME_INTERVAL = 10                        # 

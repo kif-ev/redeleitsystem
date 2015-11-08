@@ -252,10 +252,11 @@ def speaker_edit():
     speaker = Speaker.query.filter_by(id=speaker_id).first()
     form = EditSpeakerForm(obj=speaker)
     form.topic_id.data=topic_id
-        
+    
     if speaker is not None:
         if form.validate_on_submit():
             speaker.name = form.name.data
+            speaker.number = form.number.data
             db.session.commit()
             return redirect(url_for(".topic_show",id=form.topic_id.data))
         else: 
@@ -330,8 +331,8 @@ def statement_delete():
 @admin_permission.require()
 def statement_undo():
     topic_id = request.args.get("topic_id", None)
-    if statement_id is not None:
-        statement = Statement.query.filter_by(executed=True).order_by(db.desc(Statement.execution_time)).first()
+    if topic_id is not None:
+        statement = Statement.query.filter_by(executed=True, topic_id=topic_id).order_by(db.desc(Statement.execution_time)).first()
         statement.undo()
         db.session.commit()
     return redirect(url_for(".topic_show", id=topic_id))
