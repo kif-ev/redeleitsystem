@@ -162,6 +162,7 @@ div.rede-paused-supporting {
 
 .mdl-card {
     min-height: 0px;
+    height: 100%;
 }
 
 .rede-title-no-decoration {

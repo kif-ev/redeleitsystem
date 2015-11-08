@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid mdl-grid--no-spacing mdl-card">
+    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid mdl-grid--no-spacing mdl-card ">
         <div class="mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
 	    <div class="mdl-card__title"> 
 	       <h4 class="mdl-card__title-text"> Event: {{ topic.event.name }} <a href="{{ url_for(".event_edit", id=topic.event.id) }}"><i class="material-icons">edit</i></a></h4>
@@ -84,8 +84,10 @@
         </table>
     </div>
     <div class="mdl-separator rede-separator"></div>
-    <div class="mdl-cell mdl-cell--3-col mdl-cell--3-col-tablet mdl-cell--4-col-phone mdl-grid mdl-grid--no-spacing">
+    <div class="mdl-cell mdl-cell--3-col mdl-cell--3-col-tablet mdl-cell--4-col-phone mdl-grid mdl-grid--no-spacing mdl-card ">
+    <div class="mdl-cell mdl-cell--12-col mdl-cell-8-col-tablet mdl-cell--4-col-phone mdl-grid mdl-grid--no-spacing">
         {{ render_form(form, action_url=url_for(".statement_new"), action_text="Add", title="Add Statement", class_="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone", btn_list=[("","Add Statement","add_statement"),  ("mdl-button--colored","Add Meta","add_meta_statement")] ) }}
+     </div>
         <div class="mdl-cell mdl-card mdl-shadow--2dp mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
             <ul class="rede-list-no-bullet">
                 <li>
@@ -140,7 +142,7 @@
             </ul>
         </div>
     </div>
-    <div class="mdl-cell mdl-cell--3-col mdl-cell--3-col-tablet mdl-cell--4-col-phone mdl-grid mdl-grid--no-spacing">
+    <div class="mdl-cell mdl-cell--3-col mdl-cell--3-col-tablet mdl-cell--4-col-phone mdl-grid mdl-grid--no-spacing mdl-card">
 	<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-card mdl-shadow--2dp" >
         <div class="mdl-card__title">
             <h4 class="mdl-card__title-text">Topics</h4>
