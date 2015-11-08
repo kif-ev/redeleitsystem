@@ -112,6 +112,7 @@ def logout():
     flash("You have been logged out.", "alert-success")
     return redirect(url_for(".index"))
 
+"""
 @app.route("/register", methods=["GET", "POST"])
 def register():
     form = NewUserForm()
@@ -127,6 +128,7 @@ def register():
         flash("Your account has been created, you may now log in with it.")
         return redirect(url_for(".login"))
     return render_layout("register.html", form=form)
+"""
 
 @app.route("/icon-font.css")
 def icon_font():
