@@ -1,36 +1,35 @@
 {% for event in events %}    
     <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-card mdl-shadow--2dp">
-    {% if not event.paused %}
-        {% if event.current_topic_id != -1 and event.get_current_topic() %}
-            <div class="mdl-card__title">
-                {{ event.name }}: {{ event.get_current_topic().name }}
-            </div>
-            <table class="mdl-data-table mdl-js-table" style="min-width: 100%">
-                <thead>
-                    <tr>
-                        <th class="mdl-data-table__cell--non-numeric">Speaker</th>
-                        <th class="mdl-data-table__cell">Count</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for statement in event.get_current_topic().sorted_statements() %}
-                    <tr>
-                        <td class="mdl-data-table__cell--non-numeric">{{ statement.speaker.identifier() }}</td>
-                        <td class="mdl-data-table__cell">{{ statement.speaker.count(event.current_topic) }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <div class="mdl-card__title">
-                {{ event.name }}: No topic set
-            </div>
-        {% endif %}
-    {% else %}
+    {% if event.paused %}
         <div class="mdl-card__title rede-paused-title">
             <h4 class="mdl-card__title-text rede-paused-title-text">
-                {{ event.name}}: Paused until {{ event.paused_until.strftime("%H:%M") }}
+                Paused until {{ event.paused_until.strftime("%H:%M") }}
             </h4>
+        </div>
+    {% endif %}
+    {% if event.current_topic_id != -1 and event.get_current_topic() %}
+        <div class="mdl-card__title">
+            {{ event.name }}: {{ event.get_current_topic().name }}
+        </div>
+        <table class="mdl-data-table mdl-js-table" style="min-width: 100%">
+            <thead>
+                <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Speaker</th>
+                    <th class="mdl-data-table__cell">Count</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for statement in event.get_current_topic().sorted_statements() %}
+                <tr>
+                    <td class="mdl-data-table__cell--non-numeric">{{ statement.speaker.identifier() }}</td>
+                    <td class="mdl-data-table__cell">{{ statement.speaker.count(event.get_current_topic()) }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="mdl-card__title">
+            {{ event.name }}: No topic set
         </div>
     {% endif %}
     </div>
