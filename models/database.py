@@ -162,21 +162,23 @@ class Statement(db.Model):
     speaker = relationship("Speaker", backref=backref("statements",order_by=id))
     topic = relationship("Topic", backref=backref("statements",order_by=id))
     
-    def __init__(self, speaker_id, topic_id, insertion_time=None, executed=False, execution_time=None):
+    def __init__(self, speaker_id, topic_id, insertion_time=None, executed=False, execution_time=None, is_meta=False):
         self.speaker_id = speaker_id
         self.topic_id = topic_id
         self.insertion_time = insertion_time or datetime.now()
         self.executed = executed
         self.execution_time = execution_time or datetime.now()
+        self.is_meta = is_meta
     
     def __repr__(self):
-        return "<Statement(id={}, speaker={}, topic_id={}, insertion_time={}, executed={}, execution_time={})>".format(
+        return "<Statement(id={}, speaker={}, topic_id={}, insertion_time={}, executed={}, execution_time={}, is_meta={})>".format(
             self.id, 
             self.speaker,
             self.topic_id,
             self.insertion_time,
             self.executed,
-            self.execution_time
+            self.execution_time,
+            self.is_meta
         )
     
     def done(self):
