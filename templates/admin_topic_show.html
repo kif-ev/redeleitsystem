@@ -15,7 +15,8 @@
         <table class="mdl-data-table mdl-js-table mdl-shadow--2dp mdl-cell mdl-cell--12-col">
             <thead>
 		<tr>
-                    <th class="mdl-data-table__cell-non-numeric rede-large-text" style="text-align:center;" colspan="5">{{ topic.event.name }}</th>
+                    <th class="mdl-data-table__cell-non-numeric rede-large-text" style="text-align:center;" colspan="4"> Event – {{ topic.event.name }}</th>
+                    <th class="mdl-data-table__cell-non-numeric rede-medium-text" style="text-align:center;"><a href="{{ url_for(".event_edit", id=topic.event.id) }}"><i class="material-icons">edit</i></a></th>
 		</tr>
                 <tr>
                     <th class="mdl-data-table__cell-non-numeric rede-large-text" style="text-align:center;" colspan="3">{{ topic.name }}</th>
