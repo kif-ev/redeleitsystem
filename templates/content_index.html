@@ -10,7 +10,7 @@
             {% endif %}
             </h4>
         </div>
-        {% for topic in event.topics %}
+        {% for topic in event.sorted_topics() %}
             <div class="mdl-card__supporting-text {% if topic.id == event.current_topic_id %}rede-list-point-big{% endif %}">
                 {{ topic.name }}
             </div>

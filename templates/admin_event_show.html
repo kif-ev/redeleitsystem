@@ -13,7 +13,7 @@
                 </tr>
             </thead>
             <tbody>
-            {% for topic in event.topics %}
+            {% for topic in event.sorted_topics() %}
                 <tr>
                     <td class="mdl-data-table__cell--non-numeric"><a href="{{ url_for(".topic_show", id=topic.id) }}">{{ topic.name }}</a></td>
                     <td class="mdl-data-table__cell--non-numeric">{{ topic.mode }}</td>
