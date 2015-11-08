@@ -71,7 +71,7 @@
                     <tr>
                     <td>
                     {% if can_undo_statement %}
-                        <a href="{{ url_for(".statement_undo", topic_id=topic.id) }}" class="rede-href"><i class="material-icons" role="presentation">undo</i> Previous</a>
+                        <a id="previous-statement-button" href="{{ url_for(".statement_undo", topic_id=topic.id) }}" class="rede-href"><i class="material-icons" role="presentation">undo</i> Previous</a>
                     {% endif %}
                     </td>
                     <td>
