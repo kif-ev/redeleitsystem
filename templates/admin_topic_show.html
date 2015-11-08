@@ -21,7 +21,11 @@
             </thead>
             <tbody>
             {% for statement in topic.sorted_statements() %}
-                <tr>
+		{% if statement.is_meta %}
+                <tr class="rede-table-bg-red">
+		{% else %}
+		<tr>
+		{% endif %}
                     <td class="mdl-data-table__cell--non-numeric">{{ statement.speaker.identifier() }}</td>
                     <td class="mdl-data-table__cell">{{ statement.speaker.count(statement.topic) }}</td>
                     <td class="mdl-data-table__cell--non-numeric">
