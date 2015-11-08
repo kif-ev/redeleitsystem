@@ -143,11 +143,14 @@ class Speaker(db.Model):
             return "{} ({})".format(self.name, self.number)
     
     def count(self, topic):
-        return len([statement for statement in self.statements if statement.topic == topic])
+        return len([statement for statement in self.statements if statement.topic == topic and not statement.is_meta])
     
     def count_active(self, topic):
-        return len([statement for statement in self.statements if statement.topic == topic and not statement.executed])
-
+        return len([statement for statement in self.statements if statement.topic == topic and not statement.executed and not statement.is_meta])
+        
+    def count_active_meta(self, topic):
+        return len([statement for statement in self.statements if statement.topic == topic and not statement.executed and statement.is_meta])
+        
 
 class Statement(db.Model):
     __tablename__ = "statements"

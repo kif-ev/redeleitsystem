@@ -131,3 +131,10 @@ th.rede-medium-text {
 .rede-list-point-normal {
     font-weight: normal;
 }
+
+.rede-table-bg-red {
+    color: white;
+    background-color: #F44335;
+}
+
+
