@@ -2,6 +2,14 @@
 {% from "macros.html" import render_form %}
 {% block admin_title %}Topic - {{ topic.name }}{% endblock %}
 
+{% block additional_js %}
+<script src="{{ url_for("static", filename="js/nextbutton.js") }}" async></script>
+{% endblock %}
+
+{% block additional_sidelinks %}
+<a class="mdl-navigation__link" href="javascript:void(0)" onclick="setkeyhash()"><i class="mdl-color-text--blue-grey-400 material-icons">phonelink_setup</i> Set Presenter key</a>
+{% endblock %}
+
 {% block content %}
     <div class="mdl-cell mdl-cell--6-col mdl-cell--5-col-tablet mdl-cell--4-col-phone mdl-grid mdl-grid--no-spacing">
         <table class="mdl-data-table mdl-js-table mdl-shadow--2dp mdl-cell mdl-cell--12-col">
@@ -56,7 +64,7 @@
             <ul class="rede-list-no-bullet">
                 {% if topic.sorted_statements()|length() > 0 %}
                 <li>
-                    <a href="{{ url_for(".statement_done", id=topic.sorted_statements()[0].id, topic_id=topic.id) }}" class="rede-href"><i class="material-icons" role="presentation">redo</i> Next</a>
+                    <a id="next-statement-button" href="{{ url_for(".statement_done", id=topic.sorted_statements()[0].id, topic_id=topic.id) }}" class="rede-href"><i class="material-icons" role="presentation">redo</i> Next</a>
                 </li>
                 {% endif %}
                 <li><a href="{{ url_for(".statement_undo", topic_id=topic.id) }}" class="rede-href"><i class="material-icons" role="presentation">undo</i> Previous</a></li>
