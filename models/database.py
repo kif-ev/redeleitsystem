@@ -208,5 +208,7 @@ class Statement(db.Model):
     def undo(self):
         if not self.executed:
             return False
+        self.topic.sorted_statements()[0].is_current = False
         self.executed = False
-        self.execution_time = datetime(1970, 1, 1)
+        self.is_current = True
+        
