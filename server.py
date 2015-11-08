@@ -11,7 +11,7 @@ import config
 from shared import db, login_manager
 from utils import render_layout
 from models.forms import LoginForm, NewUserForm
-from models.database import User, Statement, Speaker, Topic
+from models.database import User, Statement, Speaker, Topic, Event
 
 app = Flask(__name__)
 app.config.from_object(config)
@@ -62,20 +62,14 @@ def adduser():
 
 @app.route("/")
 def index():
-    meta = []
-    return render_layout("index.html", meta=meta)
+    events = Event.query.all()
+    return render_layout("index.html", events=events)
 
 @app.route("/update")
 def update():
-    topics = Topic.query.all()
-    meta = []
-    for topic in topics:
-        ls = speech.query_statements(topic.mode, topic.id)
-        no_speaker = Speaker("No Speaker", topic)
-        no_statement = Statement(no_speaker, topic)
-        meta.append((ls[0] if len(ls) > 0 else (no_statement, no_speaker, ()), topic))
-    return render_layout("content_index.html", meta=meta)
-
+    events = Event.query.all()
+    return render_layout("content_index.html", events=events)
+    
 @app.route("/update.js")
 def update_js():
     update_interval = config.UPDATE_INDEX_INTERVAL or 1

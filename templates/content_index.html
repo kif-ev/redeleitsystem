@@ -1,18 +1,19 @@
+{% for event in events %}
     <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-card">
-    {% if event.current_topic_id != -1 %}
         <div class="mdl-card__title">
-            <h3 class="mdl-card__title-text">{{ event.current_topic.name }}: {{ event.current_topic.sorted_statements()[0].speaker.name }}</h3>
+            <h4 class="mdl-card__title-text">
+            <a href="{{ url_for("speech.index", event=event.id) }}" class="rede-title-no-decoration">
+                {{ event.name }}
+            </a>
+            {% if event.paused %}
+                (Paused)
+            {% endif %}
+            </h4>
         </div>
-        {% if event.get_current_topic() %}
-        <table class="mdl-data-table mdl-js-table">
-        {% for statement in event.get_current_topic().sorted_statements() %}
-            <tr>
-                <td>statement.speaker.name</td>
-            </tr>
+        {% for topic in event.topics %}
+            <div class="mdl-card__supporting-text {% if topic.id == event.current_topic_id %}rede-list-point-big{% endif %}">
+                {{ topic.name }}
+            </div>
         {% endfor %}
-        </table>
-        {% endif %}
-    {% else %}
-        No topic selected
-    {% endif %}
     </div>
+{% endfor %}
