@@ -41,7 +41,7 @@ def query_statements(mode, topic_id):
     print("unknown querying mode {}".format(mode))
 """
 
-@speech.route("/index")
+@speech.route("/")
 def index():
     topic_id = request.args.get("topic", None) 
     mode = request.args.get("mode", None)

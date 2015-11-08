@@ -41,11 +41,15 @@ class Event(db.Model):
     name = db.Column(db.String, unique=True)
     paused = db.Column(db.Boolean)
     paused_until = db.Column(db.DateTime)
+    current_topic_id = db.Column(db.Integer, db.ForeignKey("topics.id"))
     
-    def __init__(self, name, paused=False):
+    current_topic = relationship("Topic", foreign_keys=[current_topic_id])
+    
+    def __init__(self, name, paused=False, current_topic_id=None):
         self.name = name
         self.paused = paused
         self.paused_until = datetime(1970, 1, 1)
+        self.current_topic_id = current_topic_id or 0
     
     def __repr__(self):
         return "<Event(id={}, name={}, paused={}, paused_until={})>".format(
@@ -66,7 +70,7 @@ class Topic(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"), nullable=False)
     index = db.Column(db.Integer)
     
-    event = relationship("Event", backref=backref("topics",order_by=id))
+    event = relationship("Event", backref=backref("topics",order_by=id), foreign_keys=[event_id])
     
     def __init__(self, name, mode, event_id):
         self.name = name
