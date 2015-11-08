@@ -86,9 +86,9 @@ class Topic(db.Model):
     def sorted_statements(self):
         statements = [statement for statement in self.statements if not statement.executed]
         if self.mode == "fifo":
-            return sorted(statements, key=lambda st: st.id)
+            return sorted(statements, key=lambda st: -1 if st.is_meta else st.id)
         elif self.mode == "balanced":
-            return sorted(statements, key=lambda st: st.speaker.count(self))
+            return sorted(statements, key=lambda st: -1 if st.is_meta else st.speaker.count(self))
         else:
             return statements
     
