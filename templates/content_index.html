@@ -1,21 +1,18 @@
-    {% for (statement, speaker, count), topic in meta %}
     <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-card">
+    {% if event.current_topic_id != -1 %}
         <div class="mdl-card__title">
-            <h3 class="mdl-card__title-text">{{ topic.name }}: {{ speaker.name }}</h3>
+            <h3 class="mdl-card__title-text">{{ event.current_topic.name }}: {{ event.current_topic.sorted_statements()[0].speaker.name }}</h3>
         </div>
-        <div class="mdl-card__actions">
-            {% if current_user.is_authenticated and "user" in current_user.roles %}
-            <a href="{{ url_for("speech.index", event=event.id) }}">
-                <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-                    <i class="material-icons" role="presentation">build</i>
-                </button>
-            </a>
-            {% endif %}
-            <a href="{{ url_for("speech.show", topic=event.id) }}">
-                <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-                    <i class="material-icons" role="presentation">list</i>
-                </button>
-            </a>
-        </div>
+        {% if event.get_current_topic() %}
+        <table class="mdl-data-table mdl-js-table">
+        {% for statement in event.get_current_topic().sorted_statements() %}
+            <tr>
+                <td>statement.speaker.name</td>
+            </tr>
+        {% endfor %}
+        </table>
+        {% endif %}
+    {% else %}
+        No topic selected
+    {% endif %}
     </div>
-    {% endfor %}

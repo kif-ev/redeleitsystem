@@ -41,15 +41,13 @@ class Event(db.Model):
     name = db.Column(db.String, unique=True)
     paused = db.Column(db.Boolean)
     paused_until = db.Column(db.DateTime)
-    current_topic_id = db.Column(db.Integer, db.ForeignKey("topics.id"))
-    
-    current_topic = relationship("Topic", foreign_keys=[current_topic_id])
+    current_topic_id = db.Column(db.Integer)
     
     def __init__(self, name, paused=False, current_topic_id=None):
         self.name = name
         self.paused = paused
         self.paused_until = datetime(1970, 1, 1)
-        self.current_topic_id = current_topic_id or 0
+        self.current_topic_id = current_topic_id or -1
     
     def __repr__(self):
         return "<Event(id={}, name={}, paused={}, paused_until={})>".format(
@@ -61,6 +59,12 @@ class Event(db.Model):
     
     def sorted_topics(self):
         return sorted(self.topics, key=lambda tp: tp.get_index())
+    
+    def get_current_topic(self):
+        candidates = [topic for topic in self.topics if topic.id == self.current_topic_id]
+        if len(candidates) < 1:
+            return None
+        return candidates[0]
 
 class Topic(db.Model):
     __tablename__ = "topics"

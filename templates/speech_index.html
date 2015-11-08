@@ -1,63 +1,10 @@
 {% extends "layout.html" %}
 {% from "macros.html" import render_form %}
 {% block title %}Statements{% endblock %}
-
 {% block additional_js %}
-<script src="{{ url_for('static', filename='js/nextbutton.js') }}" async></script>
-{% endblock %}
-
-{% block additional_sidelinks %}
-<a href="#" class="mdl-navigation__link" onclick="setkeyhash()"><i class="mdl-colo-text--blue-grey-400 material-icons" role="presentation">keyboard</i>Set Next Key</a>
+    <script src="{{ url_for(".update_index_js", event=event) }}" async></script>
 {% endblock %}
 
 {% block content %}
-    {% for statements, add_form, topic in meta %}
-        <table id="next-speaker-table" class="mdl-data-table mdl-js-table mdl-shadow--2dp mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--4-col-phone sortable">
-            <thead>
-                <tr>
-                    <th class="mdl-data-table__cell--non-numeric">Speaker</th>
-                    {% if (mode is not none and mode == "balanced") or (mode is none and topic.mode == "balanced") %}
-                    <th>Count</th>
-                    {% endif %}
-                    {% if "user" in current_user.roles %}
-                    <th class="mdl-data-table__cell--non-numeric">Done</th>
-                    <th class="mdl-data-table__cell--non-numeric">Cancel</th>
-                    {% endif %}
-                </tr>
-            </thead>
-            <tbody>
-            {% for statement, speaker, count in statements %}
-                <tr>
-                    <td class="mdl-data-table__cell--non-numeric">
-                        <h5>{{ speaker.name }}</h5>
-                    </td>
-                    {% if (mode is not none and mode == "balanced") or (mode is none and topic.mode == "balanced") %}
-                    <td>
-                        <h5>{{ count }}</h5>
-                    </td>
-                    {% endif %}
-                    {% if "user" in current_user.roles %}
-                    <td class="mdl-data-table__cell--non-numeric">
-                        <a href="{{ url_for(".done", statement=statement.id, next=".index", topic=event_id) }}">
-                            <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
-                                <i class="material-icons">done</i>
-                            </button>
-                        </a>
-                    </td>
-                    <td class="mdl-data-table__cell--non-numeric">
-                        <a href="{{ url_for(".cancel", statement=statement.id, next=".index", topic=event_id) }}">
-                            <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
-                                <i class="material-icons">delete</i>
-                            </button>
-                        </a>
-                    </td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        {% if current_user.is_authenticated and "user" in current_user.roles %}
-            {{ render_form(add_form, action_url=url_for('.add', next=".index", event=event_id), action_text="Add", title="Add Speaker to {}".format(event.name)) }}
-        {% endif %}
-    {% endfor %}
+    {% include "speech_content_index.html" %}
 {% endblock %}
