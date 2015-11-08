@@ -25,12 +25,19 @@
                 </tr>
                 {% for statement in event.get_current_topic().sorted_statements() %}
                     {% if statement.is_meta %}
-                    <tr class="rede-table-bg-red">
+                    <tr class="mdl-color--red mdl-color-text--white">
                     {% else %}
                     <tr>
                     {% endif %}
                         <td class="mdl-data-table__cell--non-numeric">{{ statement.speaker.identifier() }}</td>
-                        <td class="mdl-data-table__cell">{{ statement.speaker.count(event.get_current_topic()) }}</td>
+                        <td class="mdl-data-table__cell">
+			    {% if statement.is_meta %}
+				META
+			    {% else %}
+				{{ statement.speaker.count(event.get_current_topic()) }}
+			    {% endif %}
+
+			</td>
                     </tr>
                 {% endfor %}
             {% else %}
