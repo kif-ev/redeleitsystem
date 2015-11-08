@@ -167,3 +167,15 @@ div.rede-paused-supporting {
 .rede-title-no-decoration {
     text-decoration: none;
 }
+
+.rede-card__supporting {
+    padding-top:0;
+    margin-top:0;
+}
+
+h5.rede-card__supporting-text {
+    font-size: 20px;
+    padding-top:0;
+    margin-top:0;
+}
+

@@ -11,19 +11,19 @@
 {% endblock %}
 
 {% block content %}
-    <div class="mdl-cell mdl-cell--6-col mdl-cell--5-col-tablet mdl-cell--4-col-phone mdl-grid mdl-grid--no-spacing">
+    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-grid mdl-grid--no-spacing mdl-card">
+        <div class="mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+	    <div class="mdl-card__title"> 
+	       <h4 class="mdl-card__title-text"> Event: {{ topic.event.name }} <a href="{{ url_for(".event_edit", id=topic.event.id) }}"><i class="material-icons">edit</i></a></h4>
+	    </div>
+	    <div class="mdl-card__supporting rede-card__supporting">
+		<h5 class="mdl-card__supporting-text rede-card__supporting-text"> {{ topic.name }} – {{ topic.mode }}  <a href="{{ url_for(".topic_edit", id=topic.id) }}"><i class="material-icons">edit</i></a> </h5>
+	    </div>
+	</div>
+	
         <table class="mdl-data-table mdl-js-table mdl-shadow--2dp mdl-cell mdl-cell--12-col">
             <thead>
-		<tr>
-                    <th class="mdl-data-table__cell-non-numeric rede-large-text" style="text-align:center;" colspan="4"> Event – {{ topic.event.name }}</th>
-                    <th class="mdl-data-table__cell-non-numeric rede-medium-text" style="text-align:center;"><a href="{{ url_for(".event_edit", id=topic.event.id) }}"><i class="material-icons">edit</i></a></th>
-		</tr>
-                <tr>
-                    <th class="mdl-data-table__cell-non-numeric rede-large-text" style="text-align:center;" colspan="3">{{ topic.name }}</th>
-                    <th class="mdl-data-table__cell-non-numeric rede-medium-text" style="text-align:center;">{{ topic.mode }}</th>
-                    <th class="mdl-data-table__cell-non-numeric rede-medium-text" style="text-align:center;"><a href="{{ url_for(".topic_edit", id=topic.id) }}"><i class="material-icons">edit</i></a></th>
-                </tr>
-                <tr>
+		 <tr>
                     <th class="mdl-data-table__cell--non-numeric">Speaker</th>
                     <th class="mdl-data-table__cell">Count</th>
                     <th class="mdl-data-table__cell--non-numeric">Done</th>
