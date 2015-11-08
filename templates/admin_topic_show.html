@@ -34,10 +34,31 @@
             <tbody>
             {% for statement in topic.sorted_statements() %}
                 {% if statement.is_meta %}
-                <tr class="rede-table-bg-red">
+                <tr class="mdl-color--red mdl-color-text--white">
+    		    <td class="mdl-data-table__cell--non-numeric">{{ statement.speaker.identifier() }}</td>
+                    <td class="mdl-data-table__cell">{{ statement.speaker.count(statement.topic) }}</td>
+                    <td class="mdl-data-table__cell--non-numeric">
+                        <a href="{{ url_for(".statement_done", id=statement.id, topic_id=topic.id) }}">
+                            <i class="material-icons" style="color:white;">done</i>
+                        </a>
+                    </td>
+                    <td class="mdl-data-table__cell--non-numeric">
+                        <a href="{{ url_for(".speaker_edit", id=statement.speaker.id, topic_id=topic.id) }}">
+                            <i class="material-icons" style="color:white;">edit</i>
+                        </a>
+                    </td>
+ 
+                    <td class="mdl-data-table__cell--non-numeric">
+                        <a href="{{ url_for('.statement_delete', id=statement.id, topic_id=topic.id) }}">
+                            <i class="material-icons" style="color:white;">cancel</i>
+                        </a>
+                    </td>
+                </tr>
+
+		
                 {% else %}
                 <tr>
-                {% endif %}
+              
                     <td class="mdl-data-table__cell--non-numeric">{{ statement.speaker.identifier() }}</td>
                     <td class="mdl-data-table__cell">{{ statement.speaker.count(statement.topic) }}</td>
                     <td class="mdl-data-table__cell--non-numeric">
@@ -56,8 +77,9 @@
                             <i class="material-icons">cancel</i>
                         </a>
                     </td>
-                </tr>
-            {% endfor %}
+                </tr  >
+		{% endif %}
+             {% endfor %}
             </tbody>
         </table>
     </div>
