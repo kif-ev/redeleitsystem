@@ -143,6 +143,8 @@ def topic_show():
     topic_id = request.args.get("id", None)
     if topic_id is not None:
         topic = Topic.query.filter_by(id=topic_id).first()
+        topic.event.current_topic_id = topic.id
+        db.session.commit()
         form = AddStatementForm()
         form.topic.data = topic.id
         statements = topic.sorted_statements()
@@ -348,7 +350,7 @@ def pause():
                 rawtime = float(request.form["timeslider"])
                 delta = timedelta(seconds=rawtime)
                 print(delta)
-                event.paused_until += delta    
+                event.paused_until = datetime.now() + delta    
             db.session.commit()
     topic_id = request.args.get("original", None)
     return redirect(url_for(".topic_show", id=topic_id))

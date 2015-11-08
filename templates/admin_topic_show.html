@@ -118,4 +118,13 @@
         {% endfor %}
         </table>
     </div>
+    {% if topic.event.paused %}
+    <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__title rede-paused-title">
+            <h4 class="mdl-card__title-text rede-paused-title-text">
+                Paused until {{ topic.event.paused_until.strftime("%H:%M") }}
+            </h4>
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}

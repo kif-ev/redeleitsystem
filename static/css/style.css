@@ -131,3 +131,20 @@ th.rede-medium-text {
 .rede-list-point-normal {
     font-weight: normal;
 }
+
+.rede-paused-title {
+    margin: 0 auto;
+}
+
+h4.rede-paused-title-text {
+    font-size: 48px;
+    text-align: center;
+}
+
+div.rede-paused-supporting {
+    font-size: 24px;
+}
+
+.mdl-card {
+    min-height: 0px;
+}
