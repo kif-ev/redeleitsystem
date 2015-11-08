@@ -20,7 +20,7 @@
         <tbody>
         {% for topic in event.sorted_topics() %}
             {% if topic.id == event.current_topic_id %}
-                <tr class="rede-table-bg-blue rede-table-centered">
+                <tr class="mdl-color--blue mdl-color-text--white rede-table-centered">
                     <td colspan="2">{{ topic.name }}</td>
                 </tr>
                 {% for statement in event.get_current_topic().sorted_statements() %}
