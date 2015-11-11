@@ -71,10 +71,10 @@ class Topic(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
     mode = db.Column(db.String)
-    event_id = db.Column(db.Integer, db.ForeignKey("events.id"), nullable=False)
+    event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
     index = db.Column(db.Integer)
     
-    event = relationship("Event", backref=backref("topics",order_by=id), foreign_keys=[event_id])
+    event = relationship("Event", backref=backref("topics",order_by=id), foreign_keys=[event_id], cascade="all")
     
     def __init__(self, name, mode, event_id):
         self.name = name
@@ -127,8 +127,8 @@ class Speaker(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     number = db.Column(db.Integer)
-    event_id = db.Column(db.Integer, db.ForeignKey("events.id"), nullable=False)
-    event = relationship("Event", backref=backref("speakers",order_by=id))
+    event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
+    event = relationship("Event", backref=backref("speakers",order_by=id), cascade="all")
     
     def __init__(self, name, number, event_id):
         self.name = name
@@ -163,16 +163,16 @@ class Speaker(db.Model):
 class Statement(db.Model):
     __tablename__ = "statements"
     id = db.Column(db.Integer, primary_key=True)
-    speaker_id = db.Column(db.Integer, db.ForeignKey("speakers.id"), nullable=False)
-    topic_id = db.Column(db.Integer, db.ForeignKey("topics.id"), nullable=False)
+    speaker_id = db.Column(db.Integer, db.ForeignKey("speakers.id"))
+    topic_id = db.Column(db.Integer, db.ForeignKey("topics.id"))
     insertion_time = db.Column(db.DateTime)
     executed = db.Column(db.Boolean)
     execution_time = db.Column(db.DateTime)
     is_meta = db.Column(db.Boolean, default=False)
     is_current = db.Column(db.Boolean, default=False)
 
-    speaker = relationship("Speaker", backref=backref("statements",order_by=id))
-    topic = relationship("Topic", backref=backref("statements",order_by=id))
+    speaker = relationship("Speaker", backref=backref("statements",order_by=id), cascade="all")
+    topic = relationship("Topic", backref=backref("statements",order_by=id), cascade="all")
     
     def __init__(self, speaker_id, topic_id, insertion_time=None, executed=False, execution_time=None, is_meta=False, is_current=False):
         self.speaker_id = speaker_id
