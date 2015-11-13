@@ -171,7 +171,8 @@ def topic_new():
     if event_id is None:
         return redirect(url_for(".index"))
     form.event_id.data = event_id
-    return render_layout("admin_topic_new.html", form=form)
+    event = Event.query.filter_by(id=event_id).first()
+    return render_layout("admin_topic_new.html", form=form, event=event)
 
 @admin.route("/topic/delete")
 @login_required
