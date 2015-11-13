@@ -69,12 +69,12 @@ class Event(db.Model):
 class Topic(db.Model):
     __tablename__ = "topics"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True)
+    name = db.Column(db.String)
     mode = db.Column(db.String)
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
     index = db.Column(db.Integer)
     
-    event = relationship("Event", backref=backref("topics",order_by=id), foreign_keys=[event_id], cascade="all")
+    event = relationship("Event", backref=backref("topics",order_by=id), foreign_keys=[event_id], cascade="all, delete-orphan", single_parent=True)
     
     def __init__(self, name, mode, event_id):
         self.name = name
@@ -128,7 +128,7 @@ class Speaker(db.Model):
     name = db.Column(db.String)
     number = db.Column(db.Integer)
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
-    event = relationship("Event", backref=backref("speakers",order_by=id), cascade="all")
+    event = relationship("Event", backref=backref("speakers",order_by=id), cascade="all, delete-orphan", single_parent=True)
     
     def __init__(self, name, number, event_id):
         self.name = name
@@ -171,8 +171,8 @@ class Statement(db.Model):
     is_meta = db.Column(db.Boolean, default=False)
     is_current = db.Column(db.Boolean, default=False)
 
-    speaker = relationship("Speaker", backref=backref("statements",order_by=id), cascade="all")
-    topic = relationship("Topic", backref=backref("statements",order_by=id), cascade="all")
+    speaker = relationship("Speaker", backref=backref("statements",order_by=id), cascade="all, delete-orphan", single_parent=True)
+    topic = relationship("Topic", backref=backref("statements",order_by=id), cascade="all, delete-orphan", single_parent=True)
     
     def __init__(self, speaker_id, topic_id, insertion_time=None, executed=False, execution_time=None, is_meta=False, is_current=False):
         self.speaker_id = speaker_id

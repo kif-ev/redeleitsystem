@@ -158,20 +158,20 @@ def topic_show():
 @login_required
 @admin_permission.require()
 def topic_new():
+    event_id = request.args.get("event_id", None)
     form = NewTopicForm()
     if form.validate_on_submit():
-        if Topic.query.filter_by(name=form.name.data).count() > 0:
+        if Topic.query.filter_by(event_id=event_id, name=form.name.data).count() > 0:
             flash("There already is an topic with that name.", "alert-error")
             return render_layout("admin_topic_new.html", form=form)
         topic = Topic(form.name.data, form.mode.data, form.event_id.data)
         db.session.add(topic)
         db.session.commit()
         return redirect(url_for(".event_show", id=topic.event.id))
-    event_id = request.args.get("event_id", None)
     if event_id is None:
         return redirect(url_for(".index"))
-    form.event_id.data = event_id
     event = Event.query.filter_by(id=event_id).first()
+    form.event_id.data = event_id
     return render_layout("admin_topic_new.html", form=form, event=event)
 
 @admin.route("/topic/delete")
