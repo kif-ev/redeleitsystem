@@ -43,6 +43,9 @@ class Event(db.Model):
     paused_until = db.Column(db.DateTime)
     current_topic_id = db.Column(db.Integer)
     
+    topics = relationship("Topic", backref=backref("event"), cascade="all, delete-orphan")
+    speakers = relationship("Speaker", backref=backref("event"), cascade="all, delete-orphan")
+    
     def __init__(self, name, paused=False, current_topic_id=None):
         self.name = name
         self.paused = paused
@@ -73,8 +76,8 @@ class Topic(db.Model):
     mode = db.Column(db.String)
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
     index = db.Column(db.Integer)
-    
-    event = relationship("Event", backref=backref("topics",order_by=id), foreign_keys=[event_id], cascade="all, delete-orphan", single_parent=True)
+
+    statements = relationship("Statement", backref=backref("topic"), cascade="all, delete-orphan")
     
     def __init__(self, name, mode, event_id):
         self.name = name
@@ -128,7 +131,8 @@ class Speaker(db.Model):
     name = db.Column(db.String)
     number = db.Column(db.Integer)
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
-    event = relationship("Event", backref=backref("speakers",order_by=id), cascade="all, delete-orphan", single_parent=True)
+
+    statements = relationship("Statement", backref=backref("speaker"), cascade="all, delete-orphan")
     
     def __init__(self, name, number, event_id):
         self.name = name
@@ -171,8 +175,6 @@ class Statement(db.Model):
     is_meta = db.Column(db.Boolean, default=False)
     is_current = db.Column(db.Boolean, default=False)
 
-    speaker = relationship("Speaker", backref=backref("statements",order_by=id), cascade="all, delete-orphan", single_parent=True)
-    topic = relationship("Topic", backref=backref("statements",order_by=id), cascade="all, delete-orphan", single_parent=True)
     
     def __init__(self, speaker_id, topic_id, insertion_time=None, executed=False, execution_time=None, is_meta=False, is_current=False):
         self.speaker_id = speaker_id
