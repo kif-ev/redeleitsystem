@@ -1,6 +1,7 @@
 from flask.ext.login import UserMixin
 
 from datetime import datetime
+import random
 
 from shared import db
 
@@ -100,6 +101,8 @@ class Topic(db.Model):
             return sorted(statements, key=lambda st:-2 if st.is_current else -1 if st.is_meta else st.id)
         elif self.mode == "balanced":
             return sorted(statements, key=lambda st:-2 if st.is_current else -1 if st.is_meta else st.speaker.count(self))
+        elif self.mode == "random":
+            return sorted(statements, key=lambda st:random.random())
         else:
             return statements
     

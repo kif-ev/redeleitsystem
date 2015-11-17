@@ -37,5 +37,5 @@ class NewEventForm(Form):
 
 class NewTopicForm(Form):
     name = StringField("Name", validators=[InputRequired("Entering the name is required.")])
-    mode = StringField("Mode", validators=[InputRequired("Entering the mode is required."), AnyOf(values=["balanced", "fifo"], message="Must be 'balanced' or 'fifo' atm.")])
+    mode = StringField("Mode", validators=[InputRequired("Entering the mode is required."), AnyOf(values=["balanced", "fifo", "random"], message="Must be 'balanced', 'fifo' or 'random' atm.")])
     event_id = HiddenField("Event_id")
