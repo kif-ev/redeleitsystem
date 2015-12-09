@@ -10,7 +10,7 @@ These are explicitly stated at the beginning of each file.
 Authors 
 -------
 - Lars Beckers <larsb@fsmpi.rwth-aachen.de>
-- Robin Sonnanbend <robin@fsmpi.rwth-aachen.de>
+- Robin Sonnabend <robin@fsmpi.rwth-aachen.de>
 - Hinrikus Wolf <hinrikus@fsmpi.rwth-aachen.de>
 
 If you want to contribute to Redeleitsystem drop us an email, please.
