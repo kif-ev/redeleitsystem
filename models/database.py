@@ -100,7 +100,7 @@ class Topic(db.Model):
         if self.mode == "fifo":
             return sorted(statements, key=lambda st:-2 if st.is_current else -1 if st.is_meta else st.id)
         elif self.mode == "balanced":
-            return sorted(statements, key=lambda st:-2 if st.is_current else -1 if st.is_meta else st.speaker.count(self))
+            return sorted(statements, key=lambda st:(-2,st.id) if st.is_current else (-1,st.id) if st.is_meta else (st.speaker.count(self), st.id))
         elif self.mode == "random":
             return sorted(statements, key=lambda st:random.random())
         else:
@@ -143,8 +143,9 @@ class Speaker(db.Model):
         self.event_id = event_id
     
     def __repr__(self):
-        return "<Speaker(id={}, name='{}', event_id={})>".format(
+        return "<Speaker(id={}, number={}, name='{}', event_id={})>".format(
             self.id, 
+            self.number,
             self.name,
             self.event_id
         )
